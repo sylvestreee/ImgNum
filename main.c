@@ -16,9 +16,9 @@ Image *img;
 void display_CB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-	  I_draw(img);
+		I_draw(img);
     glColor3ub(255,255,255);
-    I_bresenham(img, 0, 0, 10, 10);
+    	Strip_line(img);
     glutSwapBuffers();
 }
 

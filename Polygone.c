@@ -1,5 +1,12 @@
 #include "Polygone.h"
 
+Point P_new(int x, int y) {
+	Point p;
+	p._x = x;
+	p._y = y;
+	return p;
+}
+
 //------------------------------------------------------------------------
 
 Color C_new(float red, float green, float blue)
@@ -385,6 +392,17 @@ void I_bresenham(Image *img, int xA, int yA, int xB, int yB) {
 	}
 	firstOctant_to_Z2(xA, yA, xB, yB, x, y, &x_Z2, &y_Z2);
 	I_plot(img, x_Z2, y_Z2);
+}
+
+//------------------------------------------------------------------------
+
+void Strip_line(Image *img) {
+	Point pt1 = P_new(100, 100);
+	Point pt2 = P_new(200, 200);
+	Point pt3 = P_new(300, 50);
+
+	I_bresenham(img, pt1._x, pt1._y, pt2._x, pt2._y);
+	I_bresenham(img, pt2._x, pt2._y, pt3._x, pt3._y);
 }
 
 //------------------------------------------------------------------------

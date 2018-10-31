@@ -9,6 +9,14 @@
 
 //-----------------------------------------------------
 
+typedef struct {
+	int _x, _y;
+} Point;
+
+Point P_new(int x, int y);
+
+//-----------------------------------------------------
+
 typedef struct
 {
 	float _red, _green, _blue;
@@ -51,5 +59,7 @@ void I_bresenhamOrigin(Image *img, int x, int y); //fonctionne dans le 1er octan
 void Z2_to_firstOctant(int xA, int yA, int xB, int yB, int* xA_1o, int* yA_1o, int* xB_1o, int* yB_1o);
 void firstOctant_to_Z2(int xA, int yA, int xB, int yB, int xA_1o, int yA_1o, int* x_Z2, int* y_Z2);
 void I_bresenham(Image *img, int xA, int yA, int xB, int yB);
+
+void Strip_line(Image *img);
 
 #endif
