@@ -19,6 +19,7 @@ void display_CB()
     glClear(GL_COLOR_BUFFER_BIT);
 		I_draw(img);
     glColor3ub(255,255,255);
+    	//Strip_line(img);
     	Poly_draw(img, poly);
 
     glutSwapBuffers();
@@ -34,6 +35,7 @@ void mouse_CB(int button, int state, int x, int y)
 {
 	if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
 		I_focusPoint(img,x,img->_height-y);
+		printf("x : %d ; y : %d\n", x, y);
 		Poly_addPointLast(poly, x, y);
 	}
 	glutPostRedisplay();
@@ -116,7 +118,7 @@ int main(int argc, char **argv)
 
 		glutInitWindowSize(largeur,hauteur);
 		glutInitWindowPosition(windowPosX,windowPosY);
-		glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE );
+		glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
 		glutInit(&argc, argv);
 		glutCreateWindow(argv[0]);
 
@@ -127,7 +129,8 @@ int main(int argc, char **argv)
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		glOrtho(0,largeur,0,hauteur,-1,1);
+		//glOrtho(0,largeur,0,hauteur,-1,1);
+		glOrtho(0,largeur,hauteur,0,-1,1);
 
 		glutDisplayFunc(display_CB);
 		glutKeyboardFunc(keyboard_CB);
