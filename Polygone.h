@@ -10,10 +10,32 @@
 //-----------------------------------------------------
 
 typedef struct {
-	int _x, _y;
+	int x, y;
 } Point;
 
 Point P_new(int x, int y);
+
+//-----------------------------------------------------
+
+struct node {
+	Point pt;
+	struct node *next;
+	struct node *prev;
+};
+
+//-----------------------------------------------------
+
+typedef struct {
+	size_t length;
+	struct node *first;
+	struct node *last;
+} Polygone;
+
+Polygone *Poly_new(void);
+void Poly_addPointLast(Polygone *poly, int x, int y);
+//Polygone *Poly_addPointFirst(polygone *poly, int x, int y);
+void Poly_addPoint(Polygone *poly, int x, int y, int pos);
+void Poly_delete(Polygone **poly);
 
 //-----------------------------------------------------
 
@@ -61,5 +83,9 @@ void firstOctant_to_Z2(int xA, int yA, int xB, int yB, int xA_1o, int yA_1o, int
 void I_bresenham(Image *img, int xA, int yA, int xB, int yB);
 
 void Strip_line(Image *img);
+
+//-----------------------------------------------------
+
+void Poly_draw(Image *img, Polygone *poly);
 
 #endif

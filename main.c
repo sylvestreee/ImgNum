@@ -5,6 +5,7 @@
 #include "Polygone.h"
 
 Image *img;
+Polygone *poly;
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -18,7 +19,8 @@ void display_CB()
     glClear(GL_COLOR_BUFFER_BIT);
 		I_draw(img);
     glColor3ub(255,255,255);
-    	Strip_line(img);
+    	Poly_draw(img, poly);
+
     glutSwapBuffers();
 }
 
@@ -30,9 +32,10 @@ void display_CB()
 
 void mouse_CB(int button, int state, int x, int y)
 {
-	if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN))
+	if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
 		I_focusPoint(img,x,img->_height-y);
-
+		Poly_addPointLast(poly, x, y);
+	}
 	glutPostRedisplay();
 }
 
@@ -46,7 +49,7 @@ void keyboard_CB(unsigned char key, int x, int y)
 	// fprintf(stderr,"key=%d\n",key);
 	switch(key)
 	{
-	case 27 : exit(1); break;
+	case 27 : Poly_delete(&poly); exit(1); break;
 	case 'z' : I_zoom(img,2.0); break;
 	case 'Z' : I_zoom(img,0.5); break;
 	case 'i' : I_zoomInit(img); break;
@@ -90,6 +93,7 @@ int main(int argc, char **argv)
 	}
 	else
 	{
+		poly = Poly_new();
 		int largeur, hauteur;
 		if(argc==2)
 		{
@@ -134,6 +138,7 @@ int main(int argc, char **argv)
 
 		glutMainLoop();
 
+		//Poly_delete(*poly);
 		return 0;
 	}
 }

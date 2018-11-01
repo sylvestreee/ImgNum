@@ -2,9 +2,100 @@
 
 Point P_new(int x, int y) {
 	Point p;
-	p._x = x;
-	p._y = y;
+	p.x = x;
+	p.y = y;
 	return p;
+}
+
+//------------------------------------------------------------------------
+
+Polygone *Poly_new(void) {
+	Polygone *poly_new = malloc(sizeof *poly_new);
+	if(poly_new != NULL) {
+		poly_new->length = 0;
+		poly_new->first = NULL;
+		poly_new->last = NULL;
+	}
+	return poly_new;
+}
+
+//------------------------------------------------------------------------
+
+void Poly_addPointLast(Polygone *poly, int x, int y) {
+	if(poly != NULL) {
+		struct node *pt_new = malloc(sizeof *pt_new);
+		if(pt_new != NULL) {
+			pt_new->pt = P_new(x,y);
+			pt_new->next = NULL;
+
+			if(poly->last == NULL) {
+				pt_new->prev = NULL;
+				poly->first = pt_new;
+				poly->last = pt_new;
+			}
+
+			else {
+				pt_new->prev = poly->last;
+				poly->last->next = pt_new;
+				poly->last = pt_new;
+			}
+		}
+		poly->length++;
+		printf("nombre de points : %zu\n", poly->length);
+	}
+}
+
+//------------------------------------------------------------------------
+
+void Poly_addPoint(Polygone *poly, int x, int y, int pos) {
+	if(poly != NULL) {
+		struct node *pt_temp = poly->first;
+		int i = 1;
+		while(pt_temp != NULL && i <= pos) {
+			if(i == pos) {
+				if(poly->last == NULL) {
+					Poly_addPointLast(poly, x, y);
+				}
+				else {
+					struct node *pt_new = malloc(sizeof *pt_new);
+					if(pt_new != NULL) {
+						pt_new->pt = P_new(x, y);
+
+						//bound new with next
+						pt_new->next = pt_temp;
+
+						//bound new with prev
+						pt_new->prev = pt_temp->prev;
+
+						//bound prev with new
+						pt_temp->prev->next = pt_new;
+
+						//bound next with new
+						pt_temp->prev = pt_new;
+						poly->length++;
+					}
+				}
+			}
+			else {
+				pt_temp = pt_temp->next;
+			}
+			i++;
+		}
+	}
+}
+
+//------------------------------------------------------------------------
+
+void Poly_delete(Polygone **poly) {
+	if(*poly != NULL) {
+		struct node *p_temp = (*poly)->first;
+		while(p_temp != NULL) {
+			struct node *p_del = p_temp;
+			p_temp = p_temp->next;
+			free(p_del);
+		}
+		free(*poly); *poly = NULL;
+	}
 }
 
 //------------------------------------------------------------------------
@@ -401,8 +492,22 @@ void Strip_line(Image *img) {
 	Point pt2 = P_new(200, 200);
 	Point pt3 = P_new(300, 50);
 
-	I_bresenham(img, pt1._x, pt1._y, pt2._x, pt2._y);
-	I_bresenham(img, pt2._x, pt2._y, pt3._x, pt3._y);
+	I_bresenham(img, pt1.x, pt1.y, pt2.x, pt2.y);
+	I_bresenham(img, pt2.x, pt2.y, pt3.x, pt3.y);
+}
+
+//------------------------------------------------------------------------
+
+void Poly_draw(Image *img, Polygone *poly) {
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			while(p_temp->next != NULL) {
+				I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
+				p_temp = p_temp->next;
+			}
+		}
+	}
 }
 
 //------------------------------------------------------------------------
