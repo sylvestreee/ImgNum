@@ -6,6 +6,7 @@
 
 Image *img;
 Polygone *poly;
+int cl = 0;
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -17,11 +18,12 @@ Polygone *poly;
 void display_CB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-		I_draw(img);
+	I_draw(img);
     glColor3ub(255,255,255);
-    	//Strip_line(img);
-    	Poly_draw(img, poly);
-
+    Poly_draw(img, poly);
+    if(cl == 1) {
+    	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
+    }
     glutSwapBuffers();
 }
 
@@ -51,11 +53,21 @@ void keyboard_CB(unsigned char key, int x, int y)
 	// fprintf(stderr,"key=%d\n",key);
 	switch(key)
 	{
-	case 27 : Poly_delete(&poly); exit(1); break;
-	case 'z' : I_zoom(img,2.0); break;
-	case 'Z' : I_zoom(img,0.5); break;
-	case 'i' : I_zoomInit(img); break;
-	default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
+		case 27 : Poly_delete(&poly); exit(1); break;
+		case 'z' : I_zoom(img,2.0); break;
+		case 'Z' : I_zoom(img,0.5); break;
+		case 'i' : I_zoomInit(img); break;
+		case 99 : 
+			if(cl == 0) {
+				cl = 1;
+				printf("hey0");
+			}
+			else {
+				cl = 0;
+				printf("hey1");
+			} 
+			break;
+		default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
 }
@@ -74,11 +86,11 @@ void special_CB(int key, int x, int y)
 
 	switch(key)
 	{
-	case GLUT_KEY_UP    : I_move(img,0,d); break;
-	case GLUT_KEY_DOWN  : I_move(img,0,-d); break;
-	case GLUT_KEY_LEFT  : I_move(img,d,0); break;
-	case GLUT_KEY_RIGHT : I_move(img,-d,0); break;
-	default : fprintf(stderr,"special_CB : %d : unknown key.\n",key);
+		case GLUT_KEY_UP    : I_move(img,0,d); break;
+		case GLUT_KEY_DOWN  : I_move(img,0,-d); break;
+		case GLUT_KEY_LEFT  : I_move(img,d,0); break;
+		case GLUT_KEY_RIGHT : I_move(img,-d,0); break;
+		default : fprintf(stderr,"special_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
 }
@@ -140,8 +152,6 @@ int main(int argc, char **argv)
 		// glutPassiveMotionFunc(passive_mouse_move_CB);
 
 		glutMainLoop();
-
-		//Poly_delete(*poly);
 		return 0;
 	}
 }
