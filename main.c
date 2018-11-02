@@ -7,6 +7,8 @@
 Image *img;
 Polygone *poly;
 int cl = 0;
+int pos = 0;
+int d = -1;
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -21,9 +23,15 @@ void display_CB()
 	I_draw(img);
     glColor3ub(255,255,255);
     Poly_draw(img, poly);
-    if(cl == 1) {
-    	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
+    if(pos != 0) {
+    	Poly_select(img, poly, pos);
     }
+    if(d > 0) {
+    	Poly_move(img, poly, pos, d);
+    }
+    /*if(cl == 1) {
+    	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
+    }*/
     glutSwapBuffers();
 }
 
@@ -67,6 +75,10 @@ void keyboard_CB(unsigned char key, int x, int y)
 				printf("hey1");
 			} 
 			break;
+		case 38 : d = 0; break;
+		case 40 : d = 1; break;
+		case 37 : d = 2; break;
+		case 39 : d = 3; break;
 		default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
@@ -90,6 +102,11 @@ void special_CB(int key, int x, int y)
 		case GLUT_KEY_DOWN  : I_move(img,0,-d); break;
 		case GLUT_KEY_LEFT  : I_move(img,d,0); break;
 		case GLUT_KEY_RIGHT : I_move(img,-d,0); break;
+
+		//mode vertex
+		case 105 : if((size_t)pos != poly->length) pos++; break; // page suivante
+		case 104 : if(pos != 1) pos--; break; // page précédente
+
 		default : fprintf(stderr,"special_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();

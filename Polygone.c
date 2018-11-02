@@ -511,3 +511,60 @@ void Poly_draw(Image *img, Polygone *poly) {
 }
 
 //------------------------------------------------------------------------
+
+void Poly_select(Image *img, Polygone *poly, int pos) {
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp != NULL && i <= pos) {
+				if(i == pos) {
+					glBegin(GL_LINE_LOOP);
+					glVertex2i((p_temp->pt.x)-5,(p_temp->pt.y)+5);
+					glVertex2i((p_temp->pt.x)+5,(p_temp->pt.y)+5);
+					glVertex2i((p_temp->pt.x)+5,(p_temp->pt.y)-5);
+					glVertex2i((p_temp->pt.x)-5,(p_temp->pt.y)-5);
+					glEnd();
+				}
+				else {
+					p_temp = p_temp->next;
+				}
+				i++;
+			}
+		}
+	}
+}
+
+//------------------------------------------------------------------------
+
+void Poly_move(Image *img, Polygone *poly, int pos, int d) {
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp != NULL && i <= pos) {
+				if(i == pos) {
+					switch(d) {
+						case 0 :
+							//fprintf()
+							p_temp->pt.y+=1;
+							break;
+						case 1 :
+							p_temp->pt.y-=1;
+							break;
+						case 2 :
+							p_temp->pt.x+=1;
+							break;
+						case 3 :
+							p_temp->pt.x-=1;
+							break;
+					}
+				}
+				else {
+					p_temp = p_temp->next;
+				}
+				i++;
+			}
+		}
+	}
+}
