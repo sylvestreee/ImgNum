@@ -7,8 +7,11 @@
 Image *img;
 Polygone *poly;
 int cl = 0;
-int pos = 0;
+int pos = 1;
 int d = -1;
+
+int ins = 1;
+int ver = 0;
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -22,16 +25,20 @@ void display_CB()
     glClear(GL_COLOR_BUFFER_BIT);
 	I_draw(img);
     glColor3ub(255,255,255);
-    Poly_draw(img, poly);
-    if(pos != 0) {
+    if(ins == 1) {
+    	Poly_draw(img, poly);
+    }
+    else if(ver == 1) {
     	Poly_select(img, poly, pos);
     }
-    if(d > 0) {
-    	Poly_move(img, poly, pos, d);
-    }
-    /*if(cl == 1) {
-    	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
-    }*/
+    /*
+    	if(d > 0) {
+    		Poly_move(img, poly, pos, d);
+    	}
+    	if(cl == 1) {
+    		I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
+    	}	
+    */
     glutSwapBuffers();
 }
 
@@ -46,7 +53,9 @@ void mouse_CB(int button, int state, int x, int y)
 	if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
 		I_focusPoint(img,x,img->_height-y);
 		printf("x : %d ; y : %d\n", x, y);
-		Poly_addPointLast(poly, x, y);
+		if(ins == 1) {
+			Poly_addPointLast(poly, x, y);
+		}
 	}
 	glutPostRedisplay();
 }
@@ -64,21 +73,23 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 27 : Poly_delete(&poly); exit(1); break;
 		case 'z' : I_zoom(img,2.0); break;
 		case 'Z' : I_zoom(img,0.5); break;
-		case 'i' : I_zoomInit(img); break;
-		case 99 : 
-			if(cl == 0) {
-				cl = 1;
-				printf("hey0");
-			}
-			else {
-				cl = 0;
-				printf("hey1");
-			} 
-			break;
-		case 38 : d = 0; break;
-		case 40 : d = 1; break;
-		case 37 : d = 2; break;
-		case 39 : d = 3; break;
+		//case 'i' : I_zoomInit(img); break;
+		case 'i' : ins = 1; ver = 0; break;
+		case 'v' : ins = 0; ver = 1; break;
+		/*
+			case 99 : 
+				if(cl == 0) {
+					cl = 1;
+				}
+				else {
+					cl = 0;
+				} 
+				break;
+			case 38 : d = 0; break;
+			case 40 : d = 1; break;
+			case 37 : d = 2; break;
+			case 39 : d = 3; break;
+		*/
 		default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
@@ -104,8 +115,10 @@ void special_CB(int key, int x, int y)
 		case GLUT_KEY_RIGHT : I_move(img,-d,0); break;
 
 		//mode vertex
-		case 105 : if((size_t)pos != poly->length) pos++; break; // page suivante
-		case 104 : if(pos != 1) pos--; break; // page précédente
+		if(ver == 1) {
+			case 105 : if((size_t)pos != poly->length) pos++; break; // page suivante
+			case 104 : if(pos != 1) pos--; break; // page précédente
+		}
 
 		default : fprintf(stderr,"special_CB : %d : unknown key.\n",key);
 	}

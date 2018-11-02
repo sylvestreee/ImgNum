@@ -537,34 +537,36 @@ void Poly_select(Image *img, Polygone *poly, int pos) {
 
 //------------------------------------------------------------------------
 
-void Poly_move(Image *img, Polygone *poly, int pos, int d) {
-	if(poly != NULL) {
-		if(poly->first != NULL) {
-			struct node *p_temp = poly->first;
-			int i = 1;
-			while(p_temp != NULL && i <= pos) {
-				if(i == pos) {
-					switch(d) {
-						case 0 :
-							//fprintf()
-							p_temp->pt.y+=1;
-							break;
-						case 1 :
-							p_temp->pt.y-=1;
-							break;
-						case 2 :
-							p_temp->pt.x+=1;
-							break;
-						case 3 :
-							p_temp->pt.x-=1;
-							break;
+/*
+	void Poly_move(Image *img, Polygone *poly, int pos, int d) {
+		if(poly != NULL) {
+			if(poly->first != NULL) {
+				struct node *p_temp = poly->first;
+				int i = 1;
+				while(p_temp != NULL && i <= pos) {
+					if(i == pos) {
+						switch(d) {
+							case 0 :
+								//fprintf()
+								p_temp->pt.y+=1;
+								break;
+							case 1 :
+								p_temp->pt.y-=1;
+								break;
+							case 2 :
+								p_temp->pt.x+=1;
+								break;
+							case 3 :
+								p_temp->pt.x-=1;
+								break;
+						}
 					}
+					else {
+						p_temp = p_temp->next;
+					}
+					i++;
 				}
-				else {
-					p_temp = p_temp->next;
-				}
-				i++;
 			}
 		}
 	}
-}
+*/
