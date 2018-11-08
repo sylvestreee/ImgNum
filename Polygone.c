@@ -673,7 +673,41 @@ int closestVertex(Image *img, Polygone *poly, int x, int y) {
 			int i = 1;
 			while(p_temp != NULL) {
 				dist = sqrt(pow(x-p_temp->pt.x, 2) + pow(y-p_temp->pt.y, 2));
-				printf("distance : %d\n",dist);
+				if(i == 1) {
+					min = dist;
+					indice = i;
+				}
+				else {
+					if(dist < min) {
+						min = dist;
+						indice = i;
+					}
+				}
+				i++;
+				p_temp = p_temp->next;
+			}
+		}
+	}
+	return indice;
+}
+
+//------------------------------------------------------------------------
+
+int closestEdge(Image *img, Polygone *poly, int x, int y) {
+	int min, indice, dist, a, b, c;
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp->next != NULL) {
+				a = (p_temp->next->pt.x - p_temp->pt.x);
+				printf("a : %d\n", a);
+				b = -(p_temp->next->pt.y - p_temp->pt.y);
+				printf("b : %d\n", b);
+				c = -((a * p_temp->pt.x) + (b * p_temp->pt.y));
+				printf("c : %d\n", c);
+				dist = abs((a*x)+(b*y)+c)/sqrt(pow(a,2) + pow(b,2));
+				printf("dist : %d\n",dist);
 				if(i == 1) {
 					min = dist;
 					indice = i;

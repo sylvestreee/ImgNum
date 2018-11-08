@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <math.h>
@@ -7,14 +8,16 @@
 
 Image *img;
 Polygone *poly;
+
 int cl = 0;
 int pos = 1;
 int d = -1;
+int poi = 0;
 
+//modes
 int ins = 1;
 int ver = 0;
 int edg = 0;
-int test = 0;
 
 //------------------------------------------------------------------
 //	C'est le display callback. A chaque fois qu'il faut
@@ -30,18 +33,6 @@ void display_CB()
     I_fill(img, black);
     glColor3ub(255,255,255);
 
-    /*
-		***********************************
-		*for test purposes (closestVertex)*
-		***********************************
-	    if(ins == 1) {
-	    	Poly_draw(img, poly);
-	    }
-	    else {
-	    	Poly_draw(img, poly);
-	    }
-	*/
-
     //insert mode
     if(ins == 1) {
     	Poly_draw(img, poly);
@@ -50,10 +41,13 @@ void display_CB()
     //vertex mode
     else if(ver == 1) {
     	Poly_draw(img, poly);
-    	Poly_select(img, poly, pos);
-    	if(d >= 0) {
-    		Poly_move(img, poly, pos, d);
-    	}
+    	/*
+    		Poly_select(img, poly, pos);
+    		if(d >= 0) {
+    			Poly_move(img, poly, pos, d);
+    		}
+    	*/
+    	Poly_select(img, poly, poi);
     }
 
     //edge mode
@@ -87,16 +81,9 @@ void mouse_CB(int button, int state, int x, int y)
 			printf("x : %d ; y : %d\n", x, y);
 			Poly_addPointLast(poly, x, y);
 		}
-
-		/*
-			***********************************
-			*for test purposes (closestVertex)*
-		 	***********************************
-			else {
-				printf("x_2 : %d ; y_2 : %d\n", x, y);
-				printf("indice du point le plus proche : %d\n", closestVertex(img, poly, x, y));
-			}
-		*/
+		else if(ver == 1) {
+			poi = closestVertex(img, poly, x, y);
+		}
 	}
 	else if((button==GLUT_MIDDLE_BUTTON)&&(state==GLUT_DOWN)) {
 		if(edg == 1) {
@@ -123,13 +110,6 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 'i' : ins = 1; ver = 0; edg = 0; d = -1; break;
 		case 'v' : ins = 0; ver = 1; edg = 0; d = -1; break;
 		case 'e' : ins = 0; ver = 0; edg = 1; d = -1; break;
-
-		/*
-			***********************************
-			*for test purposes (closestVertex)*
-		 	***********************************
-			case 't' : ins = 0; break;
-		*/
 
 		case 99 : 
 			if(cl == 0) {

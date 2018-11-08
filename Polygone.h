@@ -92,5 +92,6 @@ void Poly_move(Image *img, Polygone *poly, int pos, int d);
 void Poly_selectE(Image *img, Polygone *poly, int pos, Color c);
 void Poly_addE(Image *img, Polygone *poly, int pos);
 int closestVertex(Image *img, Polygone *poly, int x, int y);
+int closestEdge(Image *img, Polygone *poly, int x, int y);
 
 #endif
