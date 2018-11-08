@@ -519,12 +519,10 @@ void Poly_select(Image *img, Polygone *poly, int pos) {
 			int i = 1;
 			while(p_temp != NULL && i <= pos) {
 				if(i == pos) {
-					glBegin(GL_LINE_LOOP);
-					glVertex2i((p_temp->pt.x)-5,(p_temp->pt.y)+5);
-					glVertex2i((p_temp->pt.x)+5,(p_temp->pt.y)+5);
-					glVertex2i((p_temp->pt.x)+5,(p_temp->pt.y)-5);
-					glVertex2i((p_temp->pt.x)-5,(p_temp->pt.y)-5);
-					glEnd();
+					I_bresenham(img, (p_temp->pt.x)-5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)+5);
+					I_bresenham(img, (p_temp->pt.x)+5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)-5);
+					I_bresenham(img, (p_temp->pt.x)+5,(p_temp->pt.y)-5,(p_temp->pt.x)-5,(p_temp->pt.y)-5);
+					I_bresenham(img, (p_temp->pt.x)-5,(p_temp->pt.y)-5,(p_temp->pt.x)-5,(p_temp->pt.y)+5);
 				}
 				else {
 					p_temp = p_temp->next;
@@ -537,36 +535,58 @@ void Poly_select(Image *img, Polygone *poly, int pos) {
 
 //------------------------------------------------------------------------
 
-/*
-	void Poly_move(Image *img, Polygone *poly, int pos, int d) {
-		if(poly != NULL) {
-			if(poly->first != NULL) {
-				struct node *p_temp = poly->first;
-				int i = 1;
-				while(p_temp != NULL && i <= pos) {
-					if(i == pos) {
-						switch(d) {
-							case 0 :
-								//fprintf()
-								p_temp->pt.y+=1;
-								break;
-							case 1 :
-								p_temp->pt.y-=1;
-								break;
-							case 2 :
-								p_temp->pt.x+=1;
-								break;
-							case 3 :
-								p_temp->pt.x-=1;
-								break;
-						}
-					}
-					else {
-						p_temp = p_temp->next;
-					}
-					i++;
+void Poly_deleteP(Image *img, Polygone *poly, int pos) {
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp != NULL && i <= pos) {
+				if(i == pos) {
+					p_temp->prev->next = p_temp->next;
+					p_temp->next->prev = p_temp->prev;
+					free(p_temp);
+					poly->length--;
 				}
+				else {
+					p_temp = p_temp->next;
+				}
+				i++;
 			}
 		}
 	}
-*/
+}
+
+//------------------------------------------------------------------------
+	
+void Poly_move(Image *img, Polygone *poly, int pos, int d) {
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp != NULL && i <= pos) {
+				if(i == pos) {
+					switch(d) {
+						case 0 :
+							p_temp->pt.y-=1;
+							break;
+						case 1 :
+							p_temp->pt.y+=1;
+							break;
+						case 2 :
+							p_temp->pt.x-=1;
+							break;
+						case 3 :
+							p_temp->pt.x+=1;
+							break;
+						default :
+							break;
+					}
+				}
+				else {
+					p_temp = p_temp->next;
+				}
+				i++;
+			}
+		}
+	}
+}

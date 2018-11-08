@@ -85,6 +85,7 @@ void I_bresenham(Image *img, int xA, int yA, int xB, int yB);
 void Strip_line(Image *img);
 void Poly_draw(Image *img, Polygone *poly);
 void Poly_select(Image *img, Polygone *poly, int pos);
-//void Poly_move(Image *img, Polygone *poly, int pos, int d);
+void Poly_deleteP(Image *img, Polygone *poly, int pos);
+void Poly_move(Image *img, Polygone *poly, int pos, int d);
 
 #endif

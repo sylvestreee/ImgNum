@@ -23,22 +23,23 @@ int ver = 0;
 void display_CB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-	I_draw(img);
+    Color black = {0, 0, 0};
+    I_fill(img, black);
     glColor3ub(255,255,255);
     if(ins == 1) {
     	Poly_draw(img, poly);
     }
     else if(ver == 1) {
+    	Poly_draw(img, poly);
     	Poly_select(img, poly, pos);
-    }
-    /*
-    	if(d > 0) {
+    	if(d >= 0) {
     		Poly_move(img, poly, pos, d);
     	}
-    	if(cl == 1) {
-    		I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
-    	}	
-    */
+    }
+    if(cl == 1) {
+    	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
+    }	
+    I_draw(img);
     glutSwapBuffers();
 }
 
@@ -74,22 +75,18 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 'z' : I_zoom(img,2.0); break;
 		case 'Z' : I_zoom(img,0.5); break;
 		//case 'i' : I_zoomInit(img); break;
-		case 'i' : ins = 1; ver = 0; break;
+		case 'i' : ins = 1; ver = 0; d = -1; break;
 		case 'v' : ins = 0; ver = 1; break;
-		/*
-			case 99 : 
-				if(cl == 0) {
-					cl = 1;
-				}
-				else {
-					cl = 0;
-				} 
-				break;
-			case 38 : d = 0; break;
-			case 40 : d = 1; break;
-			case 37 : d = 2; break;
-			case 39 : d = 3; break;
-		*/
+		case 99 : 
+			if(cl == 0) {
+				cl = 1;
+			}
+			else {
+				cl = 0;
+			} 
+			break;
+		case 127 : Poly_deleteP(img, poly, pos); break;
+		
 		default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
@@ -105,19 +102,19 @@ void special_CB(int key, int x, int y)
 {
 	// int mod = glutGetModifiers();
 
-	int d = 10;
+	//int d = 10;
 
 	switch(key)
 	{
-		case GLUT_KEY_UP    : I_move(img,0,d); break;
-		case GLUT_KEY_DOWN  : I_move(img,0,-d); break;
-		case GLUT_KEY_LEFT  : I_move(img,d,0); break;
-		case GLUT_KEY_RIGHT : I_move(img,-d,0); break;
+		case 101 : d = 0; break;
+		case 103 : d = 1; break;
+		case 100  : d = 2; break;
+		case 102 : d = 3; break;
 
 		//mode vertex
 		if(ver == 1) {
-			case 105 : if((size_t)pos != poly->length) pos++; break; // page suivante
-			case 104 : if(pos != 1) pos--; break; // page précédente
+			case 105 : if((size_t)pos != poly->length) pos++; printf("pos : %d\n",pos); break; // page suivante
+			case 104 : if(pos != 1) pos--; printf("pos : %d\n",pos); break; // page précédente
 		}
 
 		default : fprintf(stderr,"special_CB : %d : unknown key.\n",key);
