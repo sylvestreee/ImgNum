@@ -84,7 +84,6 @@ void firstOctant_to_Z2(int xA, int yA, int xB, int yB, int xA_1o, int yA_1o, int
 void I_bresenham(Image *img, int xA, int yA, int xB, int yB);
 void I_bresenhamColor(Image *img, int xA, int yA, int xB, int yB, Color c);
 
-void Strip_line(Image *img);
 void Poly_draw(Image *img, Polygone *poly);
 void Poly_select(Image *img, Polygone *poly, int pos);
 void Poly_deleteP(Image *img, Polygone *poly, int pos);

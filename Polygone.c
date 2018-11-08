@@ -7,7 +7,7 @@ Point P_new(int x, int y) {
 	return p;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 Polygone *Poly_new(void) {
 	Polygone *poly_new = malloc(sizeof *poly_new);
@@ -19,7 +19,7 @@ Polygone *Poly_new(void) {
 	return poly_new;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void Poly_addPointLast(Polygone *poly, int x, int y) {
 	if(poly != NULL) {
@@ -45,7 +45,7 @@ void Poly_addPointLast(Polygone *poly, int x, int y) {
 	}
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void Poly_addPoint(Polygone *poly, int x, int y, int pos) {
 	if(poly != NULL) {
@@ -84,7 +84,7 @@ void Poly_addPoint(Polygone *poly, int x, int y, int pos) {
 	}
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void Poly_delete(Polygone **poly) {
 	if(*poly != NULL) {
@@ -98,7 +98,7 @@ void Poly_delete(Polygone **poly) {
 	}
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 Color C_new(float red, float green, float blue)
 {
@@ -109,16 +109,16 @@ Color C_new(float red, float green, float blue)
 	return c;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void C_check(Color c, char *message)
 {
 	fprintf(stderr,"%s : %f %f %f\n",message,c._red,c._green,c._blue);
 }
 
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 Image* I_new(int width, int height)
 {
@@ -143,7 +143,7 @@ Image* I_new(int width, int height)
 	return img_new;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 static void _plot(Image *img, int x, int y, Color c)
 {
@@ -239,7 +239,7 @@ Image* I_read(char *imagefilename)
 	}
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_fill(Image *img, Color c)
 {
@@ -249,7 +249,7 @@ void I_fill(Image *img, Color c)
 			img->_buffer[x][y]=c;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_checker(Image *img, Color c1, Color c2, int step)
 {
@@ -264,14 +264,14 @@ void I_checker(Image *img, Color c1, Color c2, int step)
 		}
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_changeColor(Image *img, Color c)
 {
 	img->_current_color = c;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_plot(Image *img, int x, int y)
 {
@@ -286,7 +286,7 @@ void I_plot(Image *img, int x, int y)
 	}
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_plotColor(Image *img, int x, int y, Color c)
 {
@@ -301,7 +301,7 @@ void I_plotColor(Image *img, int x, int y, Color c)
 	}
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // Changement de repère
 
 static void _windowToImage(Image *img, int xwin, int ywin, int *ximg, int *yimg)
@@ -333,7 +333,7 @@ void I_focusPoint(Image *img, int xwin, int ywin)
 	img->_yzoom = ywin;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_zoomInit(Image *img)
 {
@@ -342,14 +342,14 @@ void I_zoomInit(Image *img)
 	img->_zoom = 1.0;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_zoom(Image *img, double zoom_coef)
 {
 	img->_zoom = img->_zoom * zoom_coef;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_move(Image *img, int x, int y)
 {
@@ -357,7 +357,7 @@ void I_move(Image *img, int x, int y)
 	img->_yoffset += y;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_draw(Image *img)
 {
@@ -380,7 +380,7 @@ void I_draw(Image *img)
 	glEnd();
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_bresenhamOrigin(Image *img, int x, int y) {
 	int dx = x, dy = y;
@@ -400,7 +400,7 @@ void I_bresenhamOrigin(Image *img, int x, int y) {
 	I_plot(img, x_Bre, y_Bre);
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void Z2_to_firstOctant(int xA, int yA, int xB, int yB, int* xA_1o, int* yA_1o, int* xB_1o, int* yB_1o) {
 	int xA_1q, yA_1q;
@@ -430,7 +430,7 @@ void Z2_to_firstOctant(int xA, int yA, int xB, int yB, int* xA_1o, int* yA_1o, i
 	}
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void firstOctant_to_Z2(int xA, int yA, int xB, int yB, int x_1o, int y_1o, int* x_Z2, int* y_Z2) {
 	int x_1q, y_1q;
@@ -456,7 +456,7 @@ void firstOctant_to_Z2(int xA, int yA, int xB, int yB, int x_1o, int y_1o, int* 
 	}
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_bresenham(Image *img, int xA, int yA, int xB, int yB) {
 	int xA_1o, yA_1o;
@@ -485,7 +485,7 @@ void I_bresenham(Image *img, int xA, int yA, int xB, int yB) {
 	I_plot(img, x_Z2, y_Z2);
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
 void I_bresenhamColor(Image *img, int xA, int yA, int xB, int yB, Color c) {
 	int xA_1o, yA_1o;
@@ -514,19 +514,11 @@ void I_bresenhamColor(Image *img, int xA, int yA, int xB, int yB, Color c) {
 	I_plotColor(img, x_Z2, y_Z2, c);
 }
 
-//------------------------------------------------------------------------
-
-void Strip_line(Image *img) {
-	Point pt1 = P_new(100, 100);
-	Point pt2 = P_new(200, 200);
-	Point pt3 = P_new(300, 50);
-
-	I_bresenham(img, pt1.x, pt1.y, pt2.x, pt2.y);
-	I_bresenham(img, pt2.x, pt2.y, pt3.x, pt3.y);
-}
-
-//------------------------------------------------------------------------
-
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image) et un polygone (type Polygone).
+//	Parcourt la chaîne et trace une ligne de Bresenham pour chaque point
+//	avec son successeur, tant que celui-ci existe.
+//---------------------------------------------------------------------------
 void Poly_draw(Image *img, Polygone *poly) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
@@ -539,8 +531,13 @@ void Poly_draw(Image *img, Polygone *poly) {
 	}
 }
 
-//------------------------------------------------------------------------
-
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image), un polygone (type Polygone)
+//	et une position (type int).
+//	Parcourt la chaîne jusqu'à atteindre le point indiqué par la position.
+// 	Une fois ce dernier atteint, un carré est dessiné à l'aide de droites de
+//	Bresenham autour du point pour le mettre en évidence.
+//---------------------------------------------------------------------------
 void Poly_select(Image *img, Polygone *poly, int pos) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
@@ -562,8 +559,12 @@ void Poly_select(Image *img, Polygone *poly, int pos) {
 	}
 }
 
-//------------------------------------------------------------------------
-
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image), un polygone (type Polygone)
+//	et une position (type int).
+//	Parcourt la chaîne jusqu'à atteindre le point indiqué par la position.
+// 	Une fois ce dernier atteint, il est supprimé de la chaîne.
+//---------------------------------------------------------------------------
 void Poly_deleteP(Image *img, Polygone *poly, int pos) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
@@ -585,8 +586,13 @@ void Poly_deleteP(Image *img, Polygone *poly, int pos) {
 	}
 }
 
-//------------------------------------------------------------------------
-	
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image), un polygone (type Polygone)
+//	une position (type int) et une direction (type int).
+//	Parcourt la chaîne jusqu'à atteindre le point indiqué par la position.
+// 	Une fois ce dernier atteint, il est déplacé dans la direction indiquée
+//	(0 -> haut / 1 -> bas / 2 -> gauche / 3 -> droite).
+//---------------------------------------------------------------------------
 void Poly_move(Image *img, Polygone *poly, int pos, int d) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
@@ -620,8 +626,13 @@ void Poly_move(Image *img, Polygone *poly, int pos, int d) {
 	}
 }
 
-//------------------------------------------------------------------------
-
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image), un polygone (type Polygone)
+//	et une position (type int) et une couleur (type Color).
+//	Parcourt la chaîne jusqu'à atteindre l'arête indiquée par la position.
+// 	Une fois cette dernière atteinte, elle est redessinée selon
+//	la couleur indiquée.
+//---------------------------------------------------------------------------
 void Poly_selectE(Image *img, Polygone *poly, int pos, Color c) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
@@ -640,8 +651,13 @@ void Poly_selectE(Image *img, Polygone *poly, int pos, Color c) {
 	}
 }
 
-//------------------------------------------------------------------------
-
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image), un polygone (type Polygone)
+//	et une position (type int).
+//	Parcourt la chaîne jusqu'à atteindre l'arête indiquée par la position.
+// 	Une fois cette dernière atteinte, un point est ajouté
+//	entre ses extrêmités.
+//---------------------------------------------------------------------------
 void Poly_addE(Image *img, Polygone *poly, int pos) {
 	int x_n, y_n;
 	if(poly != NULL) {
@@ -663,8 +679,13 @@ void Poly_addE(Image *img, Polygone *poly, int pos) {
 	}
 }
 
-//------------------------------------------------------------------------
-
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image), un polygone (type Polygone)
+//	et des coordonnées (type int).
+//	Parcourt la chaîne et calcule la distance pour chaque point avec le point
+// 	aux coordonnées indiquées.
+// 	Retourne la position du point le plus proche de ce dernier.
+//---------------------------------------------------------------------------
 int closestVertex(Image *img, Polygone *poly, int x, int y) {
 	int min, indice, dist;
 	if(poly != NULL) {
@@ -691,37 +712,39 @@ int closestVertex(Image *img, Polygone *poly, int x, int y) {
 	return indice;
 }
 
-//------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 
-int closestEdge(Image *img, Polygone *poly, int x, int y) {
-	int min, indice, dist, a, b, c;
-	if(poly != NULL) {
-		if(poly->first != NULL) {
-			struct node *p_temp = poly->first;
-			int i = 1;
-			while(p_temp->next != NULL) {
-				a = (p_temp->next->pt.x - p_temp->pt.x);
-				printf("a : %d\n", a);
-				b = -(p_temp->next->pt.y - p_temp->pt.y);
-				printf("b : %d\n", b);
-				c = -((a * p_temp->pt.x) + (b * p_temp->pt.y));
-				printf("c : %d\n", c);
-				dist = abs((a*x)+(b*y)+c)/sqrt(pow(a,2) + pow(b,2));
-				printf("dist : %d\n",dist);
-				if(i == 1) {
-					min = dist;
-					indice = i;
-				}
-				else {
-					if(dist < min) {
+/*
+	int closestEdge(Image *img, Polygone *poly, int x, int y) {
+		int min, indice, dist, a, b, c;
+		if(poly != NULL) {
+			if(poly->first != NULL) {
+				struct node *p_temp = poly->first;
+				int i = 1;
+				while(p_temp->next != NULL) {
+					a = (p_temp->next->pt.x - p_temp->pt.x);
+					printf("a : %d\n", a);
+					b = -(p_temp->next->pt.y - p_temp->pt.y);
+					printf("b : %d\n", b);
+					c = -((a * p_temp->pt.x) + (b * p_temp->pt.y));
+					printf("c : %d\n", c);
+					dist = abs((a*x)+(b*y)+c)/sqrt(pow(a,2) + pow(b,2));
+					printf("dist : %d\n",dist);
+					if(i == 1) {
 						min = dist;
 						indice = i;
 					}
+					else {
+						if(dist < min) {
+							min = dist;
+							indice = i;
+						}
+					}
+					i++;
+					p_temp = p_temp->next;
 				}
-				i++;
-				p_temp = p_temp->next;
 			}
 		}
+		return indice;
 	}
-	return indice;
-}
+*/
