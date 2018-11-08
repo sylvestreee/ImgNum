@@ -487,6 +487,35 @@ void I_bresenham(Image *img, int xA, int yA, int xB, int yB) {
 
 //------------------------------------------------------------------------
 
+void I_bresenhamColor(Image *img, int xA, int yA, int xB, int yB, Color c) {
+	int xA_1o, yA_1o;
+	int xB_1o, yB_1o;
+	int x_Z2, y_Z2;
+	int dx, dy, d;
+	int incrd1, incrd2;
+	int x, y;
+
+	Z2_to_firstOctant(xA, yA, xB, yB, &xA_1o, &yA_1o, &xB_1o, &yB_1o);
+	dx = xB_1o - xA_1o; dy = yB_1o - yA_1o;
+	incrd1 = 2*dy; incrd2 = 2*(dy-dx);
+	x = xA_1o; y = yA_1o; d = 2*dy-dx;
+	while(x<xB_1o) {
+		firstOctant_to_Z2(xA, yA, xB, yB, x, y, &x_Z2, &y_Z2);
+		I_plotColor(img, x_Z2, y_Z2, c);
+		x=x+1;
+		if(d<0) {
+			d=d+incrd1;
+		}
+		else {
+			y=y+1; d=d+incrd2;
+		}
+	}
+	firstOctant_to_Z2(xA, yA, xB, yB, x, y, &x_Z2, &y_Z2);
+	I_plotColor(img, x_Z2, y_Z2, c);
+}
+
+//------------------------------------------------------------------------
+
 void Strip_line(Image *img) {
 	Point pt1 = P_new(100, 100);
 	Point pt2 = P_new(200, 200);
@@ -589,4 +618,76 @@ void Poly_move(Image *img, Polygone *poly, int pos, int d) {
 			}
 		}
 	}
+}
+
+//------------------------------------------------------------------------
+
+void Poly_selectE(Image *img, Polygone *poly, int pos, Color c) {
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp != NULL && i <= pos) {
+				if(i == pos) {
+					I_bresenhamColor(img, p_temp->prev->pt.x, p_temp->prev->pt.y, p_temp->pt.x, p_temp->pt.y, c);
+				}
+				else {
+					p_temp = p_temp->next;
+				}
+				i++;
+			}
+		}
+	}
+}
+
+//------------------------------------------------------------------------
+
+void Poly_addE(Image *img, Polygone *poly, int pos) {
+	int x_n, y_n;
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp != NULL && i <= pos) {
+				if(i == pos) {
+					x_n = (p_temp->prev->pt.x + p_temp->pt.x)/2;
+					y_n = (p_temp->prev->pt.y + p_temp->pt.y)/2;
+					Poly_addPoint(poly, x_n, y_n, pos);
+				}
+				else {
+					p_temp = p_temp->next;
+				}
+				i++;
+			}
+		}
+	}
+}
+
+//------------------------------------------------------------------------
+
+int closestVertex(Image *img, Polygone *poly, int x, int y) {
+	int min, indice, dist;
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp != NULL) {
+				dist = sqrt(pow(x-p_temp->pt.x, 2) + pow(y-p_temp->pt.y, 2));
+				printf("distance : %d\n",dist);
+				if(i == 1) {
+					min = dist;
+					indice = i;
+				}
+				else {
+					if(dist < min) {
+						min = dist;
+						indice = i;
+					}
+				}
+				i++;
+				p_temp = p_temp->next;
+			}
+		}
+	}
+	return indice;
 }
