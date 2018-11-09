@@ -62,7 +62,7 @@ void display_CB()
     //close the polygone
     if(cl == 1) {
     	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
-    }	
+    }
     I_draw(img);
     glutSwapBuffers();
 }
@@ -111,16 +111,16 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 'v' : ins = 0; ver = 1; edg = 0; d = -1; break;
 		case 'e' : ins = 0; ver = 0; edg = 1; d = -1; break;
 
-		case 99 : 
+		case 99 :
 			if(cl == 0) {
 				cl = 1;
 			}
 			else {
 				cl = 0;
-			} 
+			}
 			break;
 		case 127 : Poly_deleteP(img, poly, pos); break;
-		
+
 		default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
 	}
 	glutPostRedisplay();
