@@ -34,7 +34,6 @@ typedef struct {
 
 Polygone *Poly_new(void);
 void Poly_addPointLast(Polygone *poly, int x, int y);
-//Polygone *Poly_addPointFirst(polygone *poly, int x, int y);
 void Poly_addPoint(Polygone *poly, int x, int y, int pos);
 void Poly_delete(Polygone **poly);
 
@@ -77,22 +76,22 @@ void I_move       (Image *img, int x, int y);
 
 void I_draw       (Image *img);
 
-void I_bresenhamOrigin(Image *img, int x, int y); //fonctionne dans le 1er octant uniquement
+void I_bresenhamOrigin	(Image *img, int x, int y);
 
-void Z2_to_firstOctant(int xA, int yA, int xB, int yB, int* xA_1o, int* yA_1o, int* xB_1o, int* yB_1o);
-void firstOctant_to_Z2(int xA, int yA, int xB, int yB, int xA_1o, int yA_1o, int* x_Z2, int* y_Z2);
-void I_bresenham(Image *img, int xA, int yA, int xB, int yB);
-void I_bresenhamColor(Image *img, int xA, int yA, int xB, int yB, Color c);
+void Z2_to_firstOctant	(int xA, int yA, int xB, int yB, int* xA_1o, int* yA_1o, int* xB_1o, int* yB_1o);
+void firstOctant_to_Z2	(int xA, int yA, int xB, int yB, int xA_1o, int yA_1o, int* x_Z2, int* y_Z2);
+void I_bresenham				(Image *img, int xA, int yA, int xB, int yB);
+void I_bresenhamColor		(Image *img, int xA, int yA, int xB, int yB, Color c);
 
-void Poly_draw(Image *img, Polygone *poly);
-void Poly_select(Image *img, Polygone *poly, int pos);
-void Poly_deletePf(Image *img, Polygone *poly);
-void Poly_deletePl(Image *img, Polygone *poly);
-void Poly_deleteP(Image *img, Polygone *poly, int pos);
-void Poly_move(Image *img, Polygone *poly, int pos, int d);
-void Poly_selectE(Image *img, Polygone *poly, int pos, Color c);
-void Poly_addE(Image *img, Polygone *poly, int pos);
-int closestVertex(Image *img, Polygone *poly, int x, int y);
-int closestEdge(Image *img, Polygone *poly, int x, int y);
+void Poly_draw					(Image *img, Polygone *poly);
+void Poly_select				(Image *img, Polygone *poly, int pos);
+void Poly_deletePf			(Image *img, Polygone *poly);
+void Poly_deletePl			(Image *img, Polygone *poly);
+void Poly_deleteP				(Image *img, Polygone *poly, int pos);
+void Poly_move					(Image *img, Polygone *poly, int pos, int d);
+void Poly_selectE				(Image *img, Polygone *poly, int pos, Color c);
+void Poly_addE					(Image *img, Polygone *poly, int pos);
+int closestVertex				(Image *img, Polygone *poly, int x, int y);
+int closestEdge					(Image *img, Polygone *poly, int x, int y);
 
 #endif

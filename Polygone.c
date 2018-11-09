@@ -758,9 +758,9 @@ int closestVertex(Image *img, Polygone *poly, int x, int y) {
 //---------------------------------------------------------------------------
 //	Prend en paramètre une image (type Image), un polygone (type Polygone)
 //	et des coordonnées (type int).
-//	Parcourt la chaîne et calcule la distance pour chaque point avec le point
-// 	aux coordonnées indiquées.
-// 	Retourne la position du point le plus proche de ce dernier.
+//	Parcourt la chaîne et calcule la distance pour chaque arête de son milieu
+// 	avec le point aux coordonnées indiquées.
+// 	Retourne la position de la chaîne la plus proche de ce dernier.
 //---------------------------------------------------------------------------
 int closestEdge(Image *img, Polygone *poly, int x, int y) {
 	int min, indice, dist, x_n, y_n;
