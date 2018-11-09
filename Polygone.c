@@ -560,6 +560,38 @@ void Poly_select(Image *img, Polygone *poly, int pos) {
 }
 
 //---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image), un polygone (type Polygone).
+//	Supprime le premier point de la chaîne.
+//---------------------------------------------------------------------------
+void Poly_deletePf(Image *img, Polygone *poly) {
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			p_temp->next->prev = NULL;
+			poly->first = p_temp->next;
+			free(p_temp);
+			poly->length--;
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image), un polygone (type Polygone).
+//	Supprime le dernier point de la chaîne.
+//---------------------------------------------------------------------------
+void Poly_deletePl(Image *img, Polygone *poly) {
+	if(poly != NULL) {
+		if(poly->last != NULL) {
+			struct node *p_temp = poly->last;
+			p_temp->prev->next = NULL;
+			poly->last = p_temp->prev;
+			free(p_temp);
+			poly->length--;
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
 //	Prend en paramètre une image (type Image), un polygone (type Polygone)
 //	et une position (type int).
 //	Parcourt la chaîne jusqu'à atteindre le point indiqué par la position.
@@ -567,20 +599,28 @@ void Poly_select(Image *img, Polygone *poly, int pos) {
 //---------------------------------------------------------------------------
 void Poly_deleteP(Image *img, Polygone *poly, int pos) {
 	if(poly != NULL) {
-		if(poly->first != NULL) {
-			struct node *p_temp = poly->first;
-			int i = 1;
-			while(p_temp != NULL && i <= pos) {
-				if(i == pos) {
-					p_temp->prev->next = p_temp->next;
-					p_temp->next->prev = p_temp->prev;
-					free(p_temp);
-					poly->length--;
+		if(pos == 1) {
+			Poly_deletePf(img, poly);
+		}
+		else if((size_t)pos == poly->length) {
+			Poly_deletePl(img, poly);
+		}
+		else {
+			if(poly->first != NULL) {
+				struct node *p_temp = poly->first;
+				int i = 1;
+				while(p_temp != NULL && i <= pos) {
+					if(i == pos) {
+						p_temp->prev->next = p_temp->next;
+						p_temp->next->prev = p_temp->prev;
+						free(p_temp);
+						poly->length--;
+					}
+					else {
+						p_temp = p_temp->next;
+					}
+					i++;
 				}
-				else {
-					p_temp = p_temp->next;
-				}
-				i++;
 			}
 		}
 	}

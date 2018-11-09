@@ -41,13 +41,12 @@ void display_CB()
     //vertex mode
     else if(ver == 1) {
     	Poly_draw(img, poly);
-    	/*
     		Poly_select(img, poly, pos);
     		if(d >= 0) {
     			Poly_move(img, poly, pos, d);
     		}
-    	*/
-    	Poly_select(img, poly, poi);
+
+    	//Poly_select(img, poly, poi);
     }
 
     //edge mode
