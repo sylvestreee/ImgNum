@@ -545,6 +545,7 @@ void Poly_select(Image *img, Polygone *poly, int pos) {
 			int i = 1;
 			while(p_temp != NULL && i <= pos) {
 				if(i == pos) {
+					printf("point n°%d\n",pos);
 					I_bresenham(img, (p_temp->pt.x)-5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)+5);
 					I_bresenham(img, (p_temp->pt.x)+5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)-5);
 					I_bresenham(img, (p_temp->pt.x)+5,(p_temp->pt.y)-5,(p_temp->pt.x)-5,(p_temp->pt.y)-5);
@@ -680,7 +681,8 @@ void Poly_selectE(Image *img, Polygone *poly, int pos, Color c) {
 			int i = 1;
 			while(p_temp != NULL && i <= pos) {
 				if(i == pos) {
-					I_bresenhamColor(img, p_temp->prev->pt.x, p_temp->prev->pt.y, p_temp->pt.x, p_temp->pt.y, c);
+					printf("arête n°%d\n",pos);
+					I_bresenhamColor(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, c);
 				}
 				else {
 					p_temp = p_temp->next;
@@ -706,8 +708,8 @@ void Poly_addE(Image *img, Polygone *poly, int pos) {
 			int i = 1;
 			while(p_temp != NULL && i <= pos) {
 				if(i == pos) {
-					x_n = (p_temp->prev->pt.x + p_temp->pt.x)/2;
-					y_n = (p_temp->prev->pt.y + p_temp->pt.y)/2;
+					x_n = (p_temp->pt.x + p_temp->next->pt.x)/2;
+					y_n = (p_temp->pt.y + p_temp->next->pt.y)/2;
 					Poly_addPoint(poly, x_n, y_n, pos);
 				}
 				else {
@@ -734,6 +736,7 @@ int closestVertex(Image *img, Polygone *poly, int x, int y) {
 			int i = 1;
 			while(p_temp != NULL) {
 				dist = sqrt(pow(x-p_temp->pt.x, 2) + pow(y-p_temp->pt.y, 2));
+				printf("distance : %d\n",dist);
 				if(i == 1) {
 					min = dist;
 					indice = i;
@@ -753,38 +756,37 @@ int closestVertex(Image *img, Polygone *poly, int x, int y) {
 }
 
 //---------------------------------------------------------------------------
-
-/*
-	int closestEdge(Image *img, Polygone *poly, int x, int y) {
-		int min, indice, dist, a, b, c;
-		if(poly != NULL) {
-			if(poly->first != NULL) {
-				struct node *p_temp = poly->first;
-				int i = 1;
-				while(p_temp->next != NULL) {
-					a = (p_temp->next->pt.x - p_temp->pt.x);
-					printf("a : %d\n", a);
-					b = -(p_temp->next->pt.y - p_temp->pt.y);
-					printf("b : %d\n", b);
-					c = -((a * p_temp->pt.x) + (b * p_temp->pt.y));
-					printf("c : %d\n", c);
-					dist = abs((a*x)+(b*y)+c)/sqrt(pow(a,2) + pow(b,2));
-					printf("dist : %d\n",dist);
-					if(i == 1) {
+//	Prend en paramètre une image (type Image), un polygone (type Polygone)
+//	et des coordonnées (type int).
+//	Parcourt la chaîne et calcule la distance pour chaque point avec le point
+// 	aux coordonnées indiquées.
+// 	Retourne la position du point le plus proche de ce dernier.
+//---------------------------------------------------------------------------
+int closestEdge(Image *img, Polygone *poly, int x, int y) {
+	int min, indice, dist, x_n, y_n;
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp->next != NULL) {
+				x_n = (p_temp->pt.x + p_temp->next->pt.x)/2;
+				y_n = (p_temp->pt.y + p_temp->next->pt.y)/2;
+				dist = sqrt(pow(x-x_n, 2) + pow(y-y_n, 2));
+				printf("distance : %d\n",dist);
+				if(i == 1) {
+					min = dist;
+					indice = i;
+				}
+				else {
+					if(dist < min) {
 						min = dist;
 						indice = i;
 					}
-					else {
-						if(dist < min) {
-							min = dist;
-							indice = i;
-						}
-					}
-					i++;
-					p_temp = p_temp->next;
 				}
+				i++;
+				p_temp = p_temp->next;
 			}
 		}
-		return indice;
 	}
-*/
+	return indice;
+}
