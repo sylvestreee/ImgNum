@@ -486,6 +486,11 @@ void I_bresenham(Image *img, int xA, int yA, int xB, int yB) {
 }
 
 //---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image), des coordonnées (type int)
+//	et une couleur (type Color).
+//	Relie deux points par une droite de Bresenham colorée par
+// 	la couleur indiquée.
+//---------------------------------------------------------------------------
 
 void I_bresenhamColor(Image *img, int xA, int yA, int xB, int yB, Color c) {
 	int xA_1o, yA_1o;
