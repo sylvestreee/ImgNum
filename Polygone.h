@@ -80,18 +80,23 @@ void I_bresenhamOrigin	(Image *img, int x, int y);
 
 void Z2_to_firstOctant	(int xA, int yA, int xB, int yB, int* xA_1o, int* yA_1o, int* xB_1o, int* yB_1o);
 void firstOctant_to_Z2	(int xA, int yA, int xB, int yB, int xA_1o, int yA_1o, int* x_Z2, int* y_Z2);
-void I_bresenham				(Image *img, int xA, int yA, int xB, int yB);
-void I_bresenhamColor		(Image *img, int xA, int yA, int xB, int yB, Color c);
+void I_bresenham		(Image *img, int xA, int yA, int xB, int yB);
+void I_bresenhamColor	(Image *img, int xA, int yA, int xB, int yB, Color c);
 
-void Poly_draw					(Image *img, Polygone *poly);
-void Poly_select				(Image *img, Polygone *poly, int pos);
-void Poly_deletePf			(Image *img, Polygone *poly);
-void Poly_deletePl			(Image *img, Polygone *poly);
-void Poly_deleteP				(Image *img, Polygone *poly, int pos);
-void Poly_move					(Image *img, Polygone *poly, int pos, int d);
-void Poly_selectE				(Image *img, Polygone *poly, int pos, Color c);
-void Poly_addE					(Image *img, Polygone *poly, int pos);
-int closestVertex				(Image *img, Polygone *poly, int x, int y);
-int closestEdge					(Image *img, Polygone *poly, int x, int y);
+void Poly_draw			(Image *img, Polygone *poly);
+void Poly_select		(Image *img, Polygone *poly, int pos);
+void Poly_deletePf		(Image *img, Polygone *poly);
+void Poly_deletePl		(Image *img, Polygone *poly);
+void Poly_deleteP		(Image *img, Polygone *poly, int pos);
+void Poly_move			(Image *img, Polygone *poly, int pos, int d);
+void Poly_selectE		(Image *img, Polygone *poly, int pos, Color c);
+void Poly_addE			(Image *img, Polygone *poly, int pos);
+int closestVertex		(Image *img, Polygone *poly, int x, int y);
+int closestEdge			(Image *img, Polygone *poly, int x, int y);
+
+int getXmin				(Polygone *poly);
+int getYmin				(Polygone *poly);
+int getXmax				(Polygone *poly);
+int getYmax				(Polygone *poly);
 
 #endif

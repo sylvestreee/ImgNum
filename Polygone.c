@@ -795,3 +795,111 @@ int closestEdge(Image *img, Polygone *poly, int x, int y) {
 	}
 	return indice;
 }
+
+//---------------------------------------------------------------------------
+//	Prend en paramètre un polygone (type Polygone).
+//	Parcourt la chaîne et renvoie la coordonnée X la plus petite.
+//---------------------------------------------------------------------------
+int getXmin(Polygone *poly) {
+	int x_min;
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp->next != NULL) {
+				if(i == 1) {
+					x_min = p_temp->pt.x;
+				}
+				else {
+					if(p_temp->pt.x < x_min) {
+						x_min = p_temp->pt.x;
+					}
+				}
+				i++;
+				p_temp = p_temp->next;
+			}
+		}
+	}
+	return x_min;
+}
+
+//---------------------------------------------------------------------------
+//	Prend en paramètre un polygone (type Polygone).
+//	Parcourt la chaîne et renvoie la coordonnée Y la plus petite.
+//---------------------------------------------------------------------------
+int getYmin(Polygone *poly) {
+	int y_min;
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp->next != NULL) {
+				if(i == 1) {
+					y_min = p_temp->pt.y;
+				}
+				else {
+					if(p_temp->pt.y < y_min) {
+						y_min = p_temp->pt.y;
+					}
+				}
+				i++;
+				p_temp = p_temp->next;
+			}
+		}
+	}
+	return y_min;
+}
+
+//---------------------------------------------------------------------------
+//	Prend en paramètre un polygone (type Polygone).
+//	Parcourt la chaîne et renvoie la coordonnée X la plus grande.
+//---------------------------------------------------------------------------
+int getXmax(Polygone *poly) {
+	int x_max;
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp->next != NULL) {
+				if(i == 1) {
+					x_max = p_temp->pt.x;
+				}
+				else {
+					if(p_temp->pt.x > x_max) {
+						x_max = p_temp->pt.x;
+					}
+				}
+				i++;
+				p_temp = p_temp->next;
+			}
+		}
+	}
+	return x_max;
+}
+
+//---------------------------------------------------------------------------
+//	Prend en paramètre un polygone (type Polygone).
+//	Parcourt la chaîne et renvoie la coordonnée Y la plus grande.
+//---------------------------------------------------------------------------
+int getYmax(Polygone *poly) {
+	int y_max;
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			int i = 1;
+			while(p_temp->next != NULL) {
+				if(i == 1) {
+					y_max = p_temp->pt.y;
+				}
+				else {
+					if(p_temp->pt.y > y_max) {
+						y_max = p_temp->pt.y;
+					}
+				}
+				i++;
+				p_temp = p_temp->next;
+			}
+		}
+	}
+	return y_max;
+}

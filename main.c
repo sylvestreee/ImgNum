@@ -36,6 +36,10 @@ void display_CB()
     //insert mode
     if(ins == 1) {
     	Poly_draw(img, poly);
+    	printf("x_min : %d\n", getXmin(poly));
+    	printf("y_min : %d\n", getYmin(poly));
+    	printf("x_max : %d\n", getXmax(poly));
+    	printf("y_max : %d\n", getYmax(poly));
     }
 
     //vertex mode
