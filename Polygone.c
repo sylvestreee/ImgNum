@@ -903,3 +903,38 @@ int getYmax(Polygone *poly) {
 	}
 	return y_max;
 }
+
+//---------------------------------------------------------------------------
+//	Prend en paramètre des coordonnées (type int).
+// 	Teste l'intersection entre deux droites et indique
+// 	si celle-ci existe ou non. 
+//---------------------------------------------------------------------------
+int get_line_intersection(int xA, int yA, int xB, int yB, int xC, int yC, int xD, int yD, int *xI, int *yI) {
+	float xAB, yAB, xDC, yDC, xCA, yCA;
+	float s, t, d;
+
+	xAB = (float)xB - (float)xA;
+	yAB = (float)yB - (float)yA;
+	xDC = (float)xC - (float)xD;
+	yDC = (float)yC - (float)yD;
+	xCA = (float)xA - (float)xC;
+	yCA = (float)yA - (float)yC;
+
+	d = yDC*xAB - yAB*xDC;
+
+	if(d != 0) {
+		s = (xDC*yCA - xCA*yDC)/d;
+		t = (xCA*yAB - xAB*yCA)/d;
+
+		if((s >= 0.0) && (s <= 1.0) && (t >= 0.0) && (t <= 0.0)) {
+			if(xI != NULL) {
+				*xI = (int)(xA + (s*xAB));
+			}
+			if(yI != NULL) {
+				*yI = (int)(xC + (t*xDC));
+			}
+			return 1;
+		}
+	}
+	return 0;
+}
