@@ -79,7 +79,7 @@ void Poly_addPointOrder(Polygone *poly, int x, int y) {
 			if(y < poly->first->pt.y) {
 				printf("add first\n");
 				Poly_addPointFirst(poly, x, y);
-			}				
+			}
 			if(y > poly->last->pt.y) {
 				printf("add last\n");
 				Poly_addPointLast(poly, x, y);
@@ -769,7 +769,7 @@ void Poly_addE(Image *img, Polygone *poly, int pos) {
 				if(i == pos) {
 					x_n = (p_temp->pt.x + p_temp->next->pt.x)/2;
 					y_n = (p_temp->pt.y + p_temp->next->pt.y)/2;
-					Poly_addPoint(poly, x_n, y_n, pos);
+					Poly_addPoint(poly, x_n, y_n, pos+1);
 				}
 				else {
 					p_temp = p_temp->next;
@@ -961,7 +961,7 @@ int getYmax(Polygone *poly) {
 //---------------------------------------------------------------------------
 //	Prend en paramètre des coordonnées (type int).
 // 	Teste l'intersection entre deux droites et indique
-// 	si celle-ci existe ou non. 
+// 	si celle-ci existe ou non.
 //---------------------------------------------------------------------------
 int get_line_intersection(int xA, int yA, int xB, int yB, int xC, int yC, int xD, int yD, int *xI, int *yI) {
 	float xAB, yAB, xDC, yDC, xCA, yCA;
