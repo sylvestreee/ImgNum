@@ -42,19 +42,23 @@ void display_CB()
     //vertex mode
     else if(ver == 1) {
     	Poly_draw(img, poly);
-    	/*	Poly_select(img, poly, pos);
-    		if(d >= 0) {
-    			Poly_move(img, poly, pos, d);
-    		}*/
-
-    	Poly_select(img, poly, poi);
+    	Poly_select(img, poly, pos);
+    	if(d >= 0) {
+    		Poly_move(img, poly, pos, d);
+    	}
+    	/*mouse
+    		Poly_select(img, poly, poi);
+    	*/
     }
 
     //edge mode
     else if(edg == 1) {
     	Color red = {1, 0, 0};
     	Poly_draw(img, poly);
-    	Poly_selectE(img, poly, poi, red);
+    	Poly_selectE(img, poly, pos, red);
+    	/*mouse
+    		Poly_selectE(img, poly, poi, red);
+    	*/
     }
 
     //close the polygone
@@ -81,17 +85,17 @@ void mouse_CB(int button, int state, int x, int y)
 	if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
 		I_focusPoint(img,x,img->_height-y);
 		if(ins == 1) {
-			printf("x : %d ; y : %d\n", x, y);
+			//printf("x : %d ; y : %d\n", x, y);
 			Poly_addPointLast(poly, x, y);
 		}
 		else if(ver == 1) {
-      printf("x : %d ; y : %d\n", x, y);
+      		//printf("x : %d ; y : %d\n", x, y);
 			poi = closestVertex(img, poly, x, y);
 		}
-    else if(edg == 1) {
-      printf("x : %d ; y : %d\n", x, y);
-      poi = closestEdge(img, poly, x, y);
-    }
+    	else if(edg == 1) {
+        	//printf("x : %d ; y : %d\n", x, y);
+        	poi = closestEdge(img, poly, x, y);
+    	}
 	}
 	else if((button==GLUT_MIDDLE_BUTTON)&&(state==GLUT_DOWN)) {
 		if(edg == 1) {
@@ -163,17 +167,27 @@ void special_CB(int key, int x, int y)
 		case 102 : d = 3; break;
 
 		//mode vertex
-		if(ver == 1) {
-			case 105 :
-        if(ver == 1) {
-          if((size_t)pos != poly->length) pos++;
-        }
-        else if(edg == 1) {
-          if((size_t)pos != (poly->length)-1) pos++;
-        }
-        break;
-			case 104 : if(pos != 1) pos--; break;
-		}
+		case 105 :
+        	if(ver == 1) {
+        		if((size_t)pos != poly->length) {
+        			d = -1; 
+        			pos++;
+        		}
+       		}
+        	else if(edg == 1) {
+          		if((size_t)pos != (poly->length)-1) {
+          			d = -1; 
+          			pos++;  
+          		}
+        	}
+        	break;
+		
+		case 104 : 
+			if(pos != 1) {
+				d = -1; 
+				pos--; 
+			}
+			break;
 
 		default : fprintf(stderr,"special_CB : %d : unknown key.\n",key);
 	}
