@@ -29,7 +29,6 @@ void Poly_addPointLast(Polygone *poly, int x, int y) {
 			pt_new->next = NULL;
 
 			if(poly->last == NULL) {
-				pt_new->prev = NULL;
 				poly->first = pt_new;
 				poly->last = pt_new;
 			}
@@ -42,6 +41,63 @@ void Poly_addPointLast(Polygone *poly, int x, int y) {
 		}
 		poly->length++;
 		printf("nombre de points : %zu\n", poly->length);
+	}
+}
+
+//---------------------------------------------------------------------------
+
+void Poly_addPointFirst(Polygone *poly, int x, int y) {
+	if(poly != NULL) {
+		struct node *pt_new = malloc(sizeof *pt_new);
+		if(pt_new != NULL) {
+			pt_new->pt = P_new(x,y);
+			pt_new->prev = NULL;
+
+			if(poly->first == NULL) {
+				poly->first = pt_new;
+				poly->last = pt_new;
+			}
+
+			else {
+				pt_new->next = poly->first;
+				poly->first->prev = pt_new;
+				poly->first = pt_new;
+			}
+		}
+		poly->length++;
+		printf("nombre de points : %zu\n", poly->length);
+	}
+}
+
+//---------------------------------------------------------------------------
+
+void Poly_addPointOrder(Polygone *poly, int x, int y) {
+	int pos = 0;
+	if(poly != NULL) {
+		struct node *p_temp = poly->first;
+		if(p_temp != NULL) {
+			printf("not null\n");
+			if(y < poly->first->pt.y) {
+				printf("add first\n");
+				Poly_addPointFirst(poly, x, y);
+			}				
+			if(y > poly->last->pt.y) {
+				printf("add last\n");
+				Poly_addPointLast(poly, x, y);
+			}
+			else {
+				/*ERROR*/
+				printf("yolo\n");
+				printf("poly->first->pt.y : %d\n", p_temp->pt.y);
+				while(p_temp != NULL && y > p_temp->pt.y) {
+					printf("lalalala\n");
+					p_temp = p_temp->next;
+					pos++;
+				}
+				Poly_addPoint(poly, x, y, pos);
+				printf("add\n");
+			}
+		}
 	}
 }
 
@@ -529,6 +585,7 @@ void Poly_draw(Image *img, Polygone *poly) {
 		if(poly->first != NULL) {
 			struct node *p_temp = poly->first;
 			while(p_temp->next != NULL) {
+				printf("Point : %d, %d\n", p_temp->pt.x, p_temp->pt.y);
 				I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
 				p_temp = p_temp->next;
 			}
@@ -926,15 +983,66 @@ int get_line_intersection(int xA, int yA, int xB, int yB, int xC, int yC, int xD
 		s = (xDC*yCA - xCA*yDC)/d;
 		t = (xCA*yAB - xAB*yCA)/d;
 
-		if((s >= 0.0) && (s <= 1.0) && (t >= 0.0) && (t <= 0.0)) {
+		if((s >= 0.0) && (s <= 1.0) && (t >= 0.0) && (t <= 1.0)) {
 			if(xI != NULL) {
 				*xI = (int)(xA + (s*xAB));
 			}
 			if(yI != NULL) {
-				*yI = (int)(xC + (t*xDC));
+				*yI = (int)(xA + (t*xAB));
 			}
 			return 1;
 		}
 	}
 	return 0;
+}
+
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image) et un polygone (type Polygone).
+//	blablabla
+//---------------------------------------------------------------------------
+void scan_line(Image *img, Polygone *poly) {
+	Polygone *poly_inter = Poly_new();
+	int *x_inter = malloc(sizeof(int));
+	int *y_inter = malloc(sizeof(int));
+
+	int xMin = getXmin(poly);
+	int yMin = getYmin(poly);
+	int xMax = getXmax(poly);
+	int yMax = getYmax(poly);
+
+	int xA = xMin;
+	int xB = xMax;
+	int y, inter, i;
+
+	for(i = yMin; i < yMax; i++) {
+		y = i;
+
+		*x_inter = -1;
+		*y_inter = -1;
+
+		if(poly != NULL) {
+			if(poly->first != NULL) {
+				struct node *p_temp = poly->first;
+				while(p_temp->next != NULL) {
+					inter = get_line_intersection(xA, y, xB, y, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, x_inter, y_inter);
+					if(inter) {
+						if(poly_inter->length == (size_t)0)
+						{
+							Poly_addPointFirst(poly_inter, *x_inter, *y_inter);
+						}
+						Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
+					}
+					p_temp = p_temp->next;
+				}
+				inter = get_line_intersection(xA, y, xB, y, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y, x_inter, y_inter);
+				if(inter) {
+					Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
+				}
+			}
+		}
+	}
+	free(x_inter);
+	free(y_inter);
+	printf("fill\n");
+	Poly_draw(img, poly_inter);
 }

@@ -13,6 +13,7 @@ int cl = 0;
 int pos = 1;
 int d = -1;
 int poi = 0;
+int s = 0;
 
 //modes
 int ins = 1;
@@ -36,10 +37,6 @@ void display_CB()
     //insert mode
     if(ins == 1) {
     	Poly_draw(img, poly);
-    	printf("x_min : %d\n", getXmin(poly));
-    	printf("y_min : %d\n", getYmin(poly));
-    	printf("x_max : %d\n", getXmax(poly));
-    	printf("y_max : %d\n", getYmax(poly));
     }
 
     //vertex mode
@@ -63,6 +60,11 @@ void display_CB()
     //close the polygone
     if(cl == 1) {
     	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
+    }
+
+    //scan line
+    if(s == 1) {
+    	scan_line(img, poly);
     }
     I_draw(img);
     glutSwapBuffers();
@@ -116,6 +118,15 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 'i' : ins = 1; ver = 0; edg = 0; d = -1; break;
 		case 'v' : ins = 0; ver = 1; edg = 0; d = -1; break;
 		case 'e' : ins = 0; ver = 0; edg = 1; d = -1; break;
+
+		case 'f' :
+			if(s == 0) {
+				s = 1;
+			}
+			else {
+				s = 0;
+			}
+			break;
 
 		case 99 :
 			if(cl == 0) {
