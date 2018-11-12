@@ -987,7 +987,7 @@ int get_line_intersection(int xA, int yA, int xB, int yB, int xC, int yC, int xD
 				*xI = (int)(xA + (s*xAB));
 			}
 			if(yI != NULL) {
-				*yI = (int)(xA + (t*xAB));
+				*yI = (int)(yA + (s*yAB));
 			}
 			return 1;
 		}
