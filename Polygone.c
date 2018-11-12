@@ -72,28 +72,27 @@ void Poly_addPointFirst(Polygone *poly, int x, int y) {
 //---------------------------------------------------------------------------
 
 void Poly_addPointOrder(Polygone *poly, int x, int y) {
-	int pos = 0;
+	int pos = 1;
 	if(poly != NULL) {
-		struct node *p_temp = poly->first;
-		if(p_temp != NULL) {
-			if(y < poly->first->pt.y) {
-				printf("add first\n");
-				Poly_addPointFirst(poly, x, y);
-			}
-			if(y > poly->last->pt.y) {
-				printf("add last\n");
-				Poly_addPointLast(poly, x, y);
-			}
-			else {
-				/*ERROR*/
-				printf("poly->first->pt.y : %d\n", p_temp->pt.y);
-				while(p_temp != NULL && y > p_temp->pt.y) {
-					printf("lalalala\n");
-					p_temp = p_temp->next;
-					pos++;
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			if(p_temp != NULL) {
+				if(y <= poly->first->pt.y) {
+					printf("add first\n");
+					Poly_addPointFirst(poly, x, y);
 				}
-				Poly_addPoint(poly, x, y, pos);
-				printf("add\n");
+				else if(y >= poly->last->pt.y) {
+					printf("add last\n");
+					Poly_addPointLast(poly, x, y);
+				}
+				else {
+					while(y > p_temp->pt.y) {
+						p_temp = p_temp->next;
+						pos++;
+					}
+					Poly_addPoint(poly, x, y, pos);
+					printf("add\n");
+				}
 			}
 		}
 	}
@@ -127,6 +126,7 @@ void Poly_addPoint(Polygone *poly, int x, int y, int pos) {
 						//bound next with new
 						pt_temp->prev = pt_new;
 						poly->length++;
+						printf("nombre de points : %zu\n", poly->length);
 					}
 				}
 			}
@@ -583,11 +583,13 @@ void Poly_draw(Image *img, Polygone *poly) {
 		if(poly->first != NULL) {
 			struct node *p_temp = poly->first;
 			while(p_temp->next != NULL) {
+				printf("x : %d ; y : %d\n", p_temp->pt.x, p_temp->pt.y);
 				I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
 				p_temp = p_temp->next;
 			}
 		}
 	}
+	printf("fin dessin\n");
 }
 
 //---------------------------------------------------------------------------
@@ -1025,15 +1027,12 @@ void scan_line(Image *img, Polygone *poly) {
 					if(inter) {
 						if(poly_inter->length == (size_t)0)
 						{
-							printf("first\n");
 							Poly_addPointFirst(poly_inter, *x_inter, *y_inter);
 						}
-						printf("not first\n");
 						Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
 					}
 					p_temp = p_temp->next;
 				}
-				printf("not not first\n");
 				inter = get_line_intersection(xA, y, xB, y, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y, x_inter, y_inter);
 				if(inter) {
 					Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
@@ -1043,6 +1042,5 @@ void scan_line(Image *img, Polygone *poly) {
 	}
 	free(x_inter);
 	free(y_inter);
-	printf("fill\n");
 	Poly_draw(img, poly_inter);
 }

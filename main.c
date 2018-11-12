@@ -12,10 +12,9 @@ Polygone *poly;
 int cl = 0;
 int pos = 1;
 int d = -1;
-int poi = 0;
 int s = 0;
 
-//modes
+/*modes*/
 int ins = 1;
 int ver = 0;
 int edg = 0;
@@ -34,39 +33,44 @@ void display_CB()
     I_fill(img, black);
     glColor3ub(255,255,255);
 
-    //insert mode
+    /*insert mode*/
     if(ins == 1) {
     	Poly_draw(img, poly);
     }
 
-    //vertex mode
+    /*vertex mode*/
     else if(ver == 1) {
     	Poly_draw(img, poly);
-    	Poly_select(img, poly, pos);
+
+      /*keyboard*/
+      Poly_select(img, poly, pos);
+
     	if(d >= 0) {
     		Poly_move(img, poly, pos, d);
     	}
-    	/*mouse
-    		Poly_select(img, poly, poi);
-    	*/
+
+    	/*mouse*/
+    	//Poly_select(img, poly, pos);
     }
 
-    //edge mode
+    /*edge mode*/
     else if(edg == 1) {
     	Color red = {1, 0, 0};
     	Poly_draw(img, poly);
-    	Poly_selectE(img, poly, pos, red);
-    	/*mouse
-    		Poly_selectE(img, poly, poi, red);
-    	*/
+
+      /*keyboard*/
+      Poly_selectE(img, poly, pos, red);
+
+    	/*mouse*/
+    	//Poly_selectE(img, poly, pos, red);
     }
 
-    //close the polygone
+    /*close the polygone*/
     if(cl == 1) {
     	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
     }
 
-    //scan line
+    /*scan line*/
     if(s == 1) {
     	scan_line(img, poly);
     }
@@ -82,21 +86,21 @@ void display_CB()
 
 void mouse_CB(int button, int state, int x, int y)
 {
-	if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
-		I_focusPoint(img,x,img->_height-y);
-		if(ins == 1) {
-			//printf("x : %d ; y : %d\n", x, y);
-			Poly_addPointLast(poly, x, y);
-		}
-		else if(ver == 1) {
-      		//printf("x : %d ; y : %d\n", x, y);
-			poi = closestVertex(img, poly, x, y);
-		}
-    	else if(edg == 1) {
-        	//printf("x : %d ; y : %d\n", x, y);
-        	poi = closestEdge(img, poly, x, y);
-    	}
-	}
+  if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
+    I_focusPoint(img,x,img->_height-y);
+	  if(ins == 1) {
+		    //printf("x : %d ; y : %d\n", x, y);
+		      Poly_addPointLast(poly, x, y);
+	       }
+    else if(ver == 1) {
+      //printf("x : %d ; y : %d\n", x, y);
+      pos = closestVertex(img, poly, x, y);
+    }
+    else if(edg == 1) {
+      //printf("x : %d ; y : %d\n", x, y);
+      pos = closestEdge(img, poly, x, y);
+    }
+  }
 	else if((button==GLUT_MIDDLE_BUTTON)&&(state==GLUT_DOWN)) {
 		if(edg == 1) {
 			Poly_addE(img, poly, pos);
@@ -122,7 +126,6 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 'i' : ins = 1; ver = 0; edg = 0; d = -1; break;
 		case 'v' : ins = 0; ver = 1; edg = 0; d = -1; break;
 		case 'e' : ins = 0; ver = 0; edg = 1; d = -1; break;
-
 		case 'f' :
 			if(s == 0) {
 				s = 1;
@@ -131,7 +134,6 @@ void keyboard_CB(unsigned char key, int x, int y)
 				s = 0;
 			}
 			break;
-
 		case 99 :
 			if(cl == 0) {
 				cl = 1;
@@ -170,22 +172,21 @@ void special_CB(int key, int x, int y)
 		case 105 :
         	if(ver == 1) {
         		if((size_t)pos != poly->length) {
-        			d = -1; 
+        			d = -1;
         			pos++;
         		}
        		}
         	else if(edg == 1) {
           		if((size_t)pos != (poly->length)-1) {
-          			d = -1; 
-          			pos++;  
+          			d = -1;
+          			pos++;
           		}
         	}
         	break;
-		
-		case 104 : 
+		case 104 :
 			if(pos != 1) {
-				d = -1; 
-				pos--; 
+				d = -1;
+				pos--;
 			}
 			break;
 
