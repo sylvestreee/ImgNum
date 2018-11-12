@@ -38,6 +38,7 @@ void Poly_addPointLast(Polygone *poly, int x, int y) {
 			}
 		}
 		poly->length++;
+		//printf("point : x = %d, y = %d\n", x, y);
 	}
 }
 
@@ -61,6 +62,7 @@ void Poly_addPointFirst(Polygone *poly, int x, int y) {
 			}
 		}
 		poly->length++;
+		//printf("point : x = %d, y = %d\n", x, y);
 	}
 }
 
@@ -72,10 +74,30 @@ void Poly_addPointOrder(Polygone *poly, int x, int y) {
 			struct node *p_temp = poly->first;
 			if(p_temp != NULL) {
 				if(y <= poly->first->pt.y) {
-					Poly_addPointFirst(poly, x, y);
+					if(y == poly->first->pt.y) {
+						if(x <= poly->first->pt.x) {
+							Poly_addPointFirst(poly, x, y);
+						}
+						else {
+							Poly_addPoint(poly, x, y, 2);
+						}
+					}
+					else {
+						Poly_addPointFirst(poly, x, y);
+					}
 				}
 				else if(y >= poly->last->pt.y) {
-					Poly_addPointLast(poly, x, y);
+					if(y == poly->last->pt.y) {
+						if(x >= poly->last->pt.x) {
+							Poly_addPointLast(poly, x, y);
+						}
+						else {
+							Poly_addPoint(poly, x, y, (int)(poly->length)-1);
+						}
+					}
+					else {
+						Poly_addPointLast(poly, x, y);
+					}
 				}
 				else {
 					while(y > p_temp->pt.y) {
@@ -116,6 +138,7 @@ void Poly_addPoint(Polygone *poly, int x, int y, int pos) {
 						/*bound next with new*/
 						pt_temp->prev = pt_new;
 						poly->length++;
+						//printf("point : x = %d, y = %d\n", x, y);
 					}
 				}
 			}
@@ -507,7 +530,8 @@ void I_bresenham(Image *img, int xA, int yA, int xB, int yB) {
 	I_plot(img, x_Z2, y_Z2);
 }
 
-//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------331, yb: 27
+
 //	Prend en paramètre une image (type Image), des coordonnées (type int)
 //	et une couleur (type Color).
 //	Relie deux points par une droite de Bresenham colorée par
@@ -520,6 +544,7 @@ void I_bresenhamColor(Image *img, int xA, int yA, int xB, int yB, Color c) {
 	int dx, dy, d;
 	int incrd1, incrd2;
 	int x, y;
+
 
 	Z2_to_firstOctant(xA, yA, xB, yB, &xA_1o, &yA_1o, &xB_1o, &yB_1o);
 	dx = xB_1o - xA_1o; dy = yB_1o - yA_1o;
@@ -552,6 +577,19 @@ void Poly_draw(Image *img, Polygone *poly) {
 			while(p_temp->next != NULL) {
 				I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
 				p_temp = p_temp->next;
+			}
+		}
+	}
+}
+
+void Poly_drawSc(Image *img, Polygone *poly) {
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			while(p_temp != NULL && p_temp->next != NULL) {
+				printf("xa: %d, ya: %d, xb: %d, yb: %d\n", p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
+				I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
+				p_temp = p_temp->next->next;
 			}
 		}
 	}
@@ -921,6 +959,21 @@ int getYmax(Polygone *poly) {
 	return y_max;
 }
 
+int isInPoly(Polygone *poly, int x, int y) {
+	if(poly != NULL) {
+		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
+			while(p_temp != NULL) {
+				if((p_temp->pt.x == x) && (p_temp->pt.y == y)) {
+					return 1;
+				}
+				p_temp = p_temp->next;
+			}
+		}
+	}
+	return 0;
+}
+
 //---------------------------------------------------------------------------
 //	Prend en paramètre des coordonnées (type int).
 // 	Teste l'intersection entre deux droites et indique
@@ -965,10 +1018,10 @@ void scan_line(Image *img, Polygone *poly) {
 	int *x_inter = malloc(sizeof(int));
 	int *y_inter = malloc(sizeof(int));
 
-	int xMin = getXmin(poly);
-	int yMin = getYmin(poly);
-	int xMax = getXmax(poly);
-	int yMax = getYmax(poly);
+	int xMin = getXmin(poly); //printf("xMin : %d\n", xMin);
+	int yMin = getYmin(poly); //printf("yMin : %d\n", yMin);
+	int xMax = getXmax(poly); //printf("xMax : %d\n", xMax);
+	int yMax = getYmax(poly); //printf("yMax : %d\n", yMax);
 
 	int xA = xMin;
 	int xB = xMax;
@@ -986,23 +1039,26 @@ void scan_line(Image *img, Polygone *poly) {
 				while(p_temp->next != NULL) {
 					inter = get_line_intersection(xA, y, xB, y, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, x_inter, y_inter);
 					if(inter) {
-						if(poly_inter->length == (size_t)0)
-						{
-							printf("first\n");
-							Poly_addPointFirst(poly_inter, *x_inter, *y_inter);
+						if(*y_inter != fmin(p_temp->pt.y, p_temp->next->pt.y)) {
+							if(poly_inter->length == (size_t)0)
+							{
+								Poly_addPointFirst(poly_inter, *x_inter, *y_inter);
+							}
+							Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
 						}
-						Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
 					}
 					p_temp = p_temp->next;
 				}
 				inter = get_line_intersection(xA, y, xB, y, poly->last->pt.x, poly->last->pt.y, poly->first->pt.x, poly->first->pt.y, x_inter, y_inter);
 				if(inter) {
-					Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
+					if(*y_inter != fmin(poly->last->pt.y, poly->first->pt.y)) {
+						Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
+					}
 				}
 			}
 		}
 	}
 	free(x_inter);
 	free(y_inter);
-	Poly_draw(img, poly_inter);
+	Poly_drawSc(img, poly_inter);
 }

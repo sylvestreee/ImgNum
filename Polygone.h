@@ -82,6 +82,7 @@ void I_bresenham					(Image *img, int xA, int yA, int xB, int yB);
 void I_bresenhamColor			(Image *img, int xA, int yA, int xB, int yB, Color c);
 
 void Poly_draw						(Image *img, Polygone *poly);
+void Poly_drawSc					(Image *img, Polygone *poly);
 void Poly_select					(Image *img, Polygone *poly, int pos);
 void Poly_deletePf				(Image *img, Polygone *poly);
 void Poly_deletePl				(Image *img, Polygone *poly);
@@ -96,6 +97,7 @@ int getXmin								(Polygone *poly);
 int getYmin								(Polygone *poly);
 int getXmax								(Polygone *poly);
 int getYmax								(Polygone *poly);
+int isInPoly							(Polygone *poly, int x, int y);
 int get_line_intersection	(int xA, int yA, int xB, int yB, int xC, int yC, int xD, int yD, int *xI, int *yI);
 void scan_line						(Image *img, Polygone *poly);
 
