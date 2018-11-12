@@ -45,12 +45,12 @@ void display_CB()
       /*keyboard*/
       Poly_select(img, poly, pos);
 
+      /*mouse*/
+    	//Poly_select(img, poly, pos);
+
     	if(d >= 0) {
     		Poly_move(img, poly, pos, d);
     	}
-
-    	/*mouse*/
-    	//Poly_select(img, poly, pos);
     }
 
     /*edge mode*/
@@ -88,16 +88,19 @@ void mouse_CB(int button, int state, int x, int y)
 {
   if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
     I_focusPoint(img,x,img->_height-y);
+
+    /*insert mode*/
 	  if(ins == 1) {
-		    //printf("x : %d ; y : %d\n", x, y);
-		      Poly_addPointLast(poly, x, y);
-	       }
+      Poly_addPointLast(poly, x, y);
+    }
+
+    /*vertex mode*/
     else if(ver == 1) {
-      //printf("x : %d ; y : %d\n", x, y);
       pos = closestVertex(img, poly, x, y);
     }
+
+    /*edge mode*/
     else if(edg == 1) {
-      //printf("x : %d ; y : %d\n", x, y);
       pos = closestEdge(img, poly, x, y);
     }
   }
@@ -116,13 +119,14 @@ void mouse_CB(int button, int state, int x, int y)
 
 void keyboard_CB(unsigned char key, int x, int y)
 {
-	// fprintf(stderr,"key=%d\n",key);
+	/*fprintf(stderr,"key=%d\n",key);*/
+
 	switch(key)
 	{
 		case 27 : Poly_delete(&poly); exit(1); break;
 		case 'z' : I_zoom(img,2.0); break;
 		case 'Z' : I_zoom(img,0.5); break;
-		//case 'i' : I_zoomInit(img); break;
+		/*case 'i' : I_zoomInit(img); break;*/
 		case 'i' : ins = 1; ver = 0; edg = 0; d = -1; break;
 		case 'v' : ins = 0; ver = 1; edg = 0; d = -1; break;
 		case 'e' : ins = 0; ver = 0; edg = 1; d = -1; break;
@@ -157,9 +161,10 @@ void keyboard_CB(unsigned char key, int x, int y)
 
 void special_CB(int key, int x, int y)
 {
-	// int mod = glutGetModifiers();
-
-	//int d = 10;
+	/*
+    int mod = glutGetModifiers();
+	  int d = 10;
+  */
 
 	switch(key)
 	{
@@ -167,15 +172,17 @@ void special_CB(int key, int x, int y)
 		case 103 : d = 1; break;
 		case 100  : d = 2; break;
 		case 102 : d = 3; break;
-
-		//mode vertex
 		case 105 :
+
+          /*vertex mode*/
         	if(ver == 1) {
         		if((size_t)pos != poly->length) {
         			d = -1;
         			pos++;
         		}
        		}
+
+          /*edge mode*/
         	else if(edg == 1) {
           		if((size_t)pos != (poly->length)-1) {
           			d = -1;
@@ -220,11 +227,6 @@ int main(int argc, char **argv)
 			largeur = atoi(argv[1]);
 			hauteur = atoi(argv[2]);
 			img = I_new(largeur,hauteur);
-			/*
-        Color rouge = C_new(100,0,0);
-			  Color blanc = C_new(200,200,255);
-        I_checker(img,rouge,blanc,50);
-      */
 		}
 		int windowPosX = 100, windowPosY = 100;
 
@@ -241,7 +243,6 @@ int main(int argc, char **argv)
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		//glOrtho(0,largeur,0,hauteur,-1,1);
 		glOrtho(0,largeur,hauteur,0,-1,1);
 
 		glutDisplayFunc(display_CB);

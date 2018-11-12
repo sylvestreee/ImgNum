@@ -9,7 +9,6 @@
 #include "Ppm.h"
 
 //-----------------------------------------------------
-
 typedef struct {
 	int x, y;
 } Point;
@@ -17,7 +16,6 @@ typedef struct {
 Point P_new(int x, int y);
 
 //-----------------------------------------------------
-
 struct node {
 	Point pt;
 	struct node *next;
@@ -25,7 +23,6 @@ struct node {
 };
 
 //-----------------------------------------------------
-
 typedef struct {
 	size_t length;
 	struct node *first;
@@ -50,7 +47,6 @@ Color C_new(float red, float green, float blue);
 void C_check(Color c, char *message);
 
 //-----------------------------------------------------
-
 typedef struct
 {
 	int _width, _height;
