@@ -4,7 +4,9 @@
 #include <GL/gl.h>
 #include <math.h>
 
+#include "Image.h"
 #include "Polygone.h"
+#include "Scanline.h"
 
 Image *img;
 Polygone *poly;
@@ -33,19 +35,19 @@ void display_CB()
     I_fill(img, black);
     glColor3ub(255,255,255);
 
-    /*insert mode*/
+    /*mode insert*/
     if(ins == 1) {
     	Poly_draw(img, poly);
     }
 
-    /*vertex mode*/
+    /*mode vertex*/
     else if(ver == 1) {
     	Poly_draw(img, poly);
 
-      /*keyboard*/
+      /*clavier*/
       Poly_select(img, poly, pos);
 
-      /*mouse*/
+      /*souris*/
     	//Poly_select(img, poly, pos);
 
     	if(d >= 0) {
@@ -53,24 +55,24 @@ void display_CB()
     	}
     }
 
-    /*edge mode*/
+    /*mode edge*/
     else if(edg == 1) {
     	Color red = {1, 0, 0};
     	Poly_draw(img, poly);
 
-      /*keyboard*/
+      /*clavier*/
       Poly_selectE(img, poly, pos, red);
 
-    	/*mouse*/
+    	/*souris*/
     	//Poly_selectE(img, poly, pos, red);
     }
 
-    /*close the polygone*/
+    /*fermer le polygone*/
     if(cl == 1) {
     	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
     }
 
-    /*scan line*/
+    /*scan_line*/
     if(s == 1) {
     	scan_line(img, poly);
     }
@@ -89,17 +91,17 @@ void mouse_CB(int button, int state, int x, int y)
   if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
     I_focusPoint(img,x,img->_height-y);
 
-    /*insert mode*/
+    /*mode insert*/
 	  if(ins == 1) {
       Poly_addPointLast(poly, x, y);
     }
 
-    /*vertex mode*/
+    /*mode vertex*/
     else if(ver == 1) {
       pos = closestVertex(img, poly, x, y);
     }
 
-    /*edge mode*/
+    /*mode edge*/
     else if(edg == 1) {
       pos = closestEdge(img, poly, x, y);
     }
@@ -173,23 +175,22 @@ void special_CB(int key, int x, int y)
 		case 100  : d = 2; break;
 		case 102 : d = 3; break;
 		case 105 :
+      /*mode vertex*/
+      if(ver == 1) {
+      	if((size_t)pos != poly->length) {
+      		d = -1;
+      		pos++;
+        }
+      }
 
-          /*vertex mode*/
-        	if(ver == 1) {
-        		if((size_t)pos != poly->length) {
-        			d = -1;
-        			pos++;
-        		}
-       		}
-
-          /*edge mode*/
-        	else if(edg == 1) {
-          		if((size_t)pos != (poly->length)-1) {
-          			d = -1;
-          			pos++;
-          		}
-        	}
-        	break;
+      /*edge mode*/
+    	else if(edg == 1) {
+      	if((size_t)pos != (poly->length)-1) {
+      		d = -1;
+      		pos++;
+      	}
+    	}
+    	break;
 		case 104 :
 			if(pos != 1) {
 				d = -1;
