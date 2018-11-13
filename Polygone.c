@@ -27,6 +27,7 @@ void Poly_addPointLast(Polygone *poly, int x, int y) {
 			pt_new->next = NULL;
 
 			if(poly->last == NULL) {
+				pt_new->prev = NULL;
 				poly->first = pt_new;
 				poly->last = pt_new;
 			}
@@ -51,8 +52,10 @@ void Poly_addPointFirst(Polygone *poly, int x, int y) {
 			pt_new->prev = NULL;
 
 			if(poly->first == NULL) {
+				pt_new->next = NULL;
 				poly->first = pt_new;
 				poly->last = pt_new;
+
 			}
 
 			else {
@@ -73,35 +76,15 @@ void Poly_addPointOrder(Polygone *poly, int x, int y) {
 		if(poly->first != NULL) {
 			struct node *p_temp = poly->first;
 			if(p_temp != NULL) {
-				if(y <= poly->first->pt.y) {
-					if(y == poly->first->pt.y) {
-						if(x <= poly->first->pt.x) {
-							Poly_addPointFirst(poly, x, y);
-						}
-						else {
-							Poly_addPoint(poly, x, y, 2);
-						}
-					}
-					else {
-						Poly_addPointFirst(poly, x, y);
-					}
+				if(x <= poly->first->pt.x) {
+					Poly_addPointFirst(poly, x, y);
 				}
-				else if(y >= poly->last->pt.y) {
-					if(y == poly->last->pt.y) {
-						if(x >= poly->last->pt.x) {
-							Poly_addPointLast(poly, x, y);
-						}
-						else {
-							Poly_addPoint(poly, x, y, (int)(poly->length)-1);
-						}
-					}
-					else {
-						Poly_addPointLast(poly, x, y);
-					}
+				else if(x >= poly->last->pt.x) {
+					Poly_addPointLast(poly, x, y);
 				}
 				else {
-					while(y > p_temp->pt.y) {
-						p_temp = p_temp->next;
+			 		while(x > p_temp->pt.x) {
+			 			p_temp = p_temp->next;
 						pos++;
 					}
 					Poly_addPoint(poly, x, y, pos);
@@ -110,6 +93,7 @@ void Poly_addPointOrder(Polygone *poly, int x, int y) {
 		}
 	}
 }
+
 
 //---------------------------------------------------------------------------
 void Poly_addPoint(Polygone *poly, int x, int y, int pos) {
@@ -1003,6 +987,7 @@ int get_line_intersection(int xA, int yA, int xB, int yB, int xC, int yC, int xD
 			if(yI != NULL) {
 				*yI = (int)(yA + (s*yAB));
 			}
+			printf("x:%d y:%d\n",*xI,*yI);
 			return 1;
 		}
 	}
@@ -1014,14 +999,13 @@ int get_line_intersection(int xA, int yA, int xB, int yB, int xC, int yC, int xD
 //	A compléter.
 //---------------------------------------------------------------------------
 void scan_line(Image *img, Polygone *poly) {
-	Polygone *poly_inter = Poly_new();
 	int *x_inter = malloc(sizeof(int));
 	int *y_inter = malloc(sizeof(int));
 
-	int xMin = getXmin(poly); //printf("xMin : %d\n", xMin);
-	int yMin = getYmin(poly); //printf("yMin : %d\n", yMin);
-	int xMax = getXmax(poly); //printf("xMax : %d\n", xMax);
-	int yMax = getYmax(poly); //printf("yMax : %d\n", yMax);
+	int xMin = getXmin(poly);
+	int yMin = getYmin(poly);
+	int xMax = getXmax(poly);
+	int yMax = getYmax(poly); 
 
 	int xA = xMin;
 	int xB = xMax;
@@ -1029,6 +1013,7 @@ void scan_line(Image *img, Polygone *poly) {
 
 	for(i = yMin; i < yMax; i++) {
 		y = i;
+		Polygone *poly_inter = Poly_new();
 
 		*x_inter = -1;
 		*y_inter = -1;
@@ -1039,26 +1024,35 @@ void scan_line(Image *img, Polygone *poly) {
 				while(p_temp->next != NULL) {
 					inter = get_line_intersection(xA, y, xB, y, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, x_inter, y_inter);
 					if(inter) {
-						if(*y_inter != fmin(p_temp->pt.y, p_temp->next->pt.y)) {
+						if(*y_inter != fmax(p_temp->pt.y, p_temp->next->pt.y)) {
 							if(poly_inter->length == (size_t)0)
 							{
 								Poly_addPointFirst(poly_inter, *x_inter, *y_inter);
+							} else {
+								Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
 							}
-							Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
 						}
 					}
 					p_temp = p_temp->next;
 				}
 				inter = get_line_intersection(xA, y, xB, y, poly->last->pt.x, poly->last->pt.y, poly->first->pt.x, poly->first->pt.y, x_inter, y_inter);
 				if(inter) {
-					if(*y_inter != fmin(poly->last->pt.y, poly->first->pt.y)) {
+					if(*y_inter != fmax(poly->last->pt.y, poly->first->pt.y)) {
 						Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
 					}
 				}
 			}
 		}
+		printf("fin if\n");
+		struct node* p_temp2 = poly_inter->first;
+		while(p_temp2->next != NULL){
+			printf("x:%d y:%d\n",p_temp2->pt.x,p_temp2->pt.y);
+			p_temp2 = p_temp2->next;
+		}
+		Poly_drawSc(img, poly_inter);
+		Poly_delete(&poly_inter);
 	}
 	free(x_inter);
 	free(y_inter);
-	Poly_drawSc(img, poly_inter);
+	// Poly_drawSc(img, poly_inter);
 }

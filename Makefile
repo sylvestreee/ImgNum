@@ -2,7 +2,7 @@
 
 CC=gcc
 
-CFLAGS=-Wall
+CFLAGS=-Wall -g
 LFLAGS=-L/usr/lib -lm -lGL -lglut
 
 EXEC=plot
