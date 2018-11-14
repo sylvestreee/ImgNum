@@ -27,7 +27,6 @@ int edg = 0;
 //	appelee. Tous les dessins doivent etre faits a partir
 //	de cette fonction.
 //------------------------------------------------------------------
-
 void display_CB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -35,36 +34,22 @@ void display_CB()
     I_fill(img, black);
     glColor3ub(255,255,255);
 
-    /*mode insert*/
-    if(ins == 1) {
-    	Poly_draw(img, poly);
-    }
-
+    Poly_draw(img, poly);
     /*mode vertex*/
-    else if(ver == 1) {
-    	Poly_draw(img, poly);
-
-      /*clavier*/
-      Poly_select(img, poly, pos);
-
-      /*souris*/
-    	//Poly_select(img, poly, pos);
-
-    	if(d >= 0) {
-    		Poly_move(img, poly, pos, d);
-    	}
+    if(ver == 1) {
+      Color green = {0, 1, 0};
+      Poly_select(img, poly, pos, green);
     }
 
     /*mode edge*/
     else if(edg == 1) {
+      //Poly_draw(img, poly);
+      if((size_t)pos == poly->length) {
+        d = -1;
+        pos--;
+      }
     	Color red = {1, 0, 0};
-    	Poly_draw(img, poly);
-
-      /*clavier*/
       Poly_selectE(img, poly, pos, red);
-
-    	/*souris*/
-    	//Poly_selectE(img, poly, pos, red);
     }
 
     /*fermer le polygone*/
@@ -74,7 +59,9 @@ void display_CB()
 
     /*scan_line*/
     if(s == 1) {
-    	scan_line(img, poly);
+      if(cl == 1) {
+        scan_line(img, poly);
+      }
     }
     I_draw(img);
     glutSwapBuffers();
@@ -85,7 +72,6 @@ void display_CB()
 // la souris (x,y), en fonction du bouton de la souris qui a été
 // pressé ou relaché.
 //------------------------------------------------------------------
-
 void mouse_CB(int button, int state, int x, int y)
 {
   if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
@@ -106,8 +92,11 @@ void mouse_CB(int button, int state, int x, int y)
       pos = closestEdge(img, poly, x, y);
     }
   }
+
 	else if((button==GLUT_MIDDLE_BUTTON)&&(state==GLUT_DOWN)) {
-		if(edg == 1) {
+
+    /*mode vertex*/
+    if(edg == 1) {
 			Poly_addE(img, poly, pos);
 		}
 	}
@@ -118,7 +107,6 @@ void mouse_CB(int button, int state, int x, int y)
 // Cette fonction permet de réagir au fait que l'utilisateur
 // presse une touche (non-spéciale) du clavier.
 //------------------------------------------------------------------
-
 void keyboard_CB(unsigned char key, int x, int y)
 {
 	/*fprintf(stderr,"key=%d\n",key);*/
@@ -128,25 +116,14 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 27 : Poly_delete(&poly); exit(1); break;
 		case 'z' : I_zoom(img,2.0); break;
 		case 'Z' : I_zoom(img,0.5); break;
-		/*case 'i' : I_zoomInit(img); break;*/
 		case 'i' : ins = 1; ver = 0; edg = 0; d = -1; break;
 		case 'v' : ins = 0; ver = 1; edg = 0; d = -1; break;
 		case 'e' : ins = 0; ver = 0; edg = 1; d = -1; break;
 		case 'f' :
-			if(s == 0) {
-				s = 1;
-			}
-			else {
-				s = 0;
-			}
+      s = !s;
 			break;
-		case 99 :
-			if(cl == 0) {
-				cl = 1;
-			}
-			else {
-				cl = 0;
-			}
+		case 'c' :
+      cl = !cl;
 			break;
 		case 127 : Poly_deleteP(img, poly, pos); break;
 
@@ -170,15 +147,15 @@ void special_CB(int key, int x, int y)
 
 	switch(key)
 	{
-		case 101 : d = 0; break;
-		case 103 : d = 1; break;
-		case 100  : d = 2; break;
-		case 102 : d = 3; break;
-		case 105 :
+		case GLUT_KEY_UP : d = 0; Poly_move(img, poly, pos, d); break;
+		case GLUT_KEY_DOWN : d = 1; Poly_move(img, poly, pos, d); break;
+		case GLUT_KEY_LEFT  : d = 2; Poly_move(img, poly, pos, d); break;
+		case GLUT_KEY_RIGHT : d = 3; Poly_move(img, poly, pos, d); break;
+		case GLUT_KEY_PAGE_DOWN :
+      d = -1;
       /*mode vertex*/
       if(ver == 1) {
       	if((size_t)pos != poly->length) {
-      		d = -1;
       		pos++;
         }
       }
@@ -186,14 +163,12 @@ void special_CB(int key, int x, int y)
       /*edge mode*/
     	else if(edg == 1) {
       	if((size_t)pos != (poly->length)-1) {
-      		d = -1;
       		pos++;
       	}
     	}
     	break;
-		case 104 :
+		case GLUT_KEY_PAGE_UP :
 			if(pos != 1) {
-				d = -1;
 				pos--;
 			}
 			break;

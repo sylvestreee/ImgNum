@@ -162,6 +162,11 @@ void Poly_draw(Image *img, Polygone *poly) {
 	}
 }
 
+//---------------------------------------------------------------------------
+//	Prend en paramètre une image (type Image) et un polygone (type Polygone).
+//	Comportement identique à Poly_drawSc, à la différence que les points
+// 	sont choisis deux à deux.
+//---------------------------------------------------------------------------
 void Poly_drawSc(Image *img, Polygone *poly) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
@@ -181,17 +186,17 @@ void Poly_drawSc(Image *img, Polygone *poly) {
 // 	Une fois ce dernier atteint, un carré est dessiné à l'aide de droites de
 //	Bresenham autour du point pour le mettre en évidence.
 //---------------------------------------------------------------------------
-void Poly_select(Image *img, Polygone *poly, int pos) {
+void Poly_select(Image *img, Polygone *poly, int pos, Color c) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
 			struct node *p_temp = poly->first;
 			int i = 1;
 			while(p_temp != NULL && i <= pos) {
 				if(i == pos) {
-					I_bresenham(img, (p_temp->pt.x)-5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)+5);
-					I_bresenham(img, (p_temp->pt.x)+5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)-5);
-					I_bresenham(img, (p_temp->pt.x)+5,(p_temp->pt.y)-5,(p_temp->pt.x)-5,(p_temp->pt.y)-5);
-					I_bresenham(img, (p_temp->pt.x)-5,(p_temp->pt.y)-5,(p_temp->pt.x)-5,(p_temp->pt.y)+5);
+					I_bresenhamColor(img, (p_temp->pt.x)-5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)+5,c);
+					I_bresenhamColor(img, (p_temp->pt.x)+5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)-5,c);
+					I_bresenhamColor(img, (p_temp->pt.x)+5,(p_temp->pt.y)-5,(p_temp->pt.x)-5,(p_temp->pt.y)-5,c);
+					I_bresenhamColor(img, (p_temp->pt.x)-5,(p_temp->pt.y)-5,(p_temp->pt.x)-5,(p_temp->pt.y)+5,c);
 				}
 				else {
 					p_temp = p_temp->next;
@@ -210,10 +215,19 @@ void Poly_deletePf(Image *img, Polygone *poly) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
 			struct node *p_temp = poly->first;
-			p_temp->next->prev = NULL;
-			poly->first = p_temp->next;
-			free(p_temp);
-			poly->length--;
+			if(poly->length != (size_t)1) {
+				printf("non_vide\n");
+				p_temp->next->prev = NULL;
+				poly->first = p_temp->next;
+				free(p_temp);
+				poly->length--;
+			}
+			else {
+				free(p_temp);
+				poly->first = NULL;
+				poly->last = NULL;
+				poly->length--;
+			}
 		}
 	}
 }
@@ -243,6 +257,7 @@ void Poly_deletePl(Image *img, Polygone *poly) {
 void Poly_deleteP(Image *img, Polygone *poly, int pos) {
 	if(poly != NULL) {
 		if(pos == 1) {
+			printf("hey\n");
 			Poly_deletePf(img, poly);
 		}
 		else if((size_t)pos == poly->length) {

@@ -40,7 +40,7 @@ void Poly_delete(Polygone **poly);
 //-----------------------------------------------------
 void Poly_draw						(Image *img, Polygone *poly);
 void Poly_drawSc					(Image *img, Polygone *poly);
-void Poly_select					(Image *img, Polygone *poly, int pos);
+void Poly_select					(Image *img, Polygone *poly, int pos, Color c);
 void Poly_deletePf				(Image *img, Polygone *poly);
 void Poly_deletePl				(Image *img, Polygone *poly);
 void Poly_deleteP					(Image *img, Polygone *poly, int pos);
