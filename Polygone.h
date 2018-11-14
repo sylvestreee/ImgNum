@@ -38,16 +38,16 @@ void Poly_addPoint(Polygone *poly, int x, int y, int pos);
 void Poly_delete(Polygone **poly);
 
 //-----------------------------------------------------
-void Poly_draw						(Image *img, Polygone *poly);
+void Poly_draw						(Image *img, Polygone *poly, int cl);
 void Poly_drawSc					(Image *img, Polygone *poly);
 void Poly_select					(Image *img, Polygone *poly, int pos, Color c);
 void Poly_deletePf				(Image *img, Polygone *poly);
-void Poly_deletePl				(Image *img, Polygone *poly);
+void Poly_deletePl				(Image *img, Polygone *poly, int cl);
 void Poly_deleteP					(Image *img, Polygone *poly, int pos);
 void Poly_move						(Image *img, Polygone *poly, int pos, int d);
 void Poly_selectE					(Image *img, Polygone *poly, int pos, Color c);
 void Poly_addE						(Image *img, Polygone *poly, int pos);
 int closestVertex					(Image *img, Polygone *poly, int x, int y);
-int closestEdge						(Image *img, Polygone *poly, int x, int y);
+int closestEdge						(Image *img, Polygone *poly, int x, int y, int cl);
 
 #endif

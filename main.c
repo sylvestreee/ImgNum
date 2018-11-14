@@ -124,6 +124,18 @@ void keyboard_CB(unsigned char key, int x, int y)
 			break;
 		case 'c' :
       cl = !cl;
+
+      /*fermeture du polygone*/
+      if(cl == 1) {
+        if(poly != NULL && poly->length >= 3) {
+          poly->last->next = poly->first;
+        }
+      }
+
+      /*ouverture du polygone*/
+      else {
+        poly->last->next = NULL;
+      }
 			break;
 		case 127 :
       if(ver == 1) {
@@ -169,6 +181,11 @@ void special_CB(int key, int x, int y)
       	if((size_t)pos != poly->length) {
       		pos++;
         }
+
+        /*polygone fermé -> arrivé au dernier point*/
+        if(cl == 1 && (size_t)pos == poly->length) {
+          pos = 1;
+        }
       }
 
       /*edge mode*/
@@ -176,12 +193,30 @@ void special_CB(int key, int x, int y)
       	if((size_t)pos != (poly->length)-1) {
       		pos++;
       	}
+
+        /*polygone fermé*/
+        if(cl == 1) {
+
+          /*arrivé à l'avant-dernier point*/
+          if((size_t)pos == (poly->length)-1) {
+            pos++;
+          }
+
+          /*arrivé au dernier point*/
+          else if((size_t)pos == poly->length) {
+          pos = 1;
+        }
     	}
     	break;
 		case GLUT_KEY_PAGE_UP :
 			if(pos != 1) {
 				pos--;
 			}
+
+      /*polygone fermé -> arrivé au premier point*/
+      if(cl == 1 && pos == 1) {
+        pos = (int)poly->length;
+      }
 			break;
 
 		default : fprintf(stderr,"special_CB : %d : unknown key.\n",key);
