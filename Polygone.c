@@ -216,7 +216,6 @@ void Poly_deletePf(Image *img, Polygone *poly) {
 		if(poly->first != NULL) {
 			struct node *p_temp = poly->first;
 			if(poly->length != (size_t)1) {
-				printf("non_vide\n");
 				p_temp->next->prev = NULL;
 				poly->first = p_temp->next;
 				free(p_temp);
@@ -226,7 +225,7 @@ void Poly_deletePf(Image *img, Polygone *poly) {
 				free(p_temp);
 				poly->first = NULL;
 				poly->last = NULL;
-				poly->length--;
+				poly->length = 0;
 			}
 		}
 	}
@@ -240,10 +239,18 @@ void Poly_deletePl(Image *img, Polygone *poly) {
 	if(poly != NULL) {
 		if(poly->last != NULL) {
 			struct node *p_temp = poly->last;
-			p_temp->prev->next = NULL;
-			poly->last = p_temp->prev;
-			free(p_temp);
-			poly->length--;
+			if(poly->length != (size_t)1) {
+				p_temp->prev->next = NULL;
+				poly->last = p_temp->prev;
+				free(p_temp);
+				poly->length--;
+			}
+			else {
+				free(p_temp);
+				poly->first = NULL;
+				poly->last = NULL;
+				poly->length = 0;
+			}
 		}
 	}
 }
@@ -257,7 +264,6 @@ void Poly_deletePl(Image *img, Polygone *poly) {
 void Poly_deleteP(Image *img, Polygone *poly, int pos) {
 	if(poly != NULL) {
 		if(pos == 1) {
-			printf("hey\n");
 			Poly_deletePf(img, poly);
 		}
 		else if((size_t)pos == poly->length) {
@@ -330,6 +336,7 @@ void Poly_move(Image *img, Polygone *poly, int pos, int d) {
 //	Parcourt la chaîne jusqu'à atteindre l'arête indiquée par la position.
 // 	Une fois cette dernière atteinte, elle est redessinée selon
 //	la couleur indiquée.
+// 	ATTENTION: risque de segfault
 //---------------------------------------------------------------------------
 void Poly_selectE(Image *img, Polygone *poly, int pos, Color c) {
 	if(poly != NULL) {

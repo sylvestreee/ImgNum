@@ -125,7 +125,18 @@ void keyboard_CB(unsigned char key, int x, int y)
 		case 'c' :
       cl = !cl;
 			break;
-		case 127 : Poly_deleteP(img, poly, pos); break;
+		case 127 :
+      if(ver == 1) {
+        Poly_deleteP(img, poly, pos);
+        if((size_t)pos == (poly->length+1) && poly->length >= (size_t)1) {
+          pos--;
+        }
+        if(poly->length == (size_t)0) {
+          pos = 1;
+        }
+        printf("pos : %d\n",pos);
+      }
+      break;
 
 		default : fprintf(stderr,"keyboard_CB : %d : unknown key.\n",key);
 	}
