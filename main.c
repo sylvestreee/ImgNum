@@ -35,6 +35,14 @@ void display_CB()
     glColor3ub(255,255,255);
 
     Poly_draw(img, poly, cl);
+
+    /*fermeture du polygone*/
+    if(cl == 1) {
+      if(poly->length > (size_t)1) {
+        I_bresenham(img, poly->last->pt.x, poly->last->pt.y, poly->first->pt.x, poly->first->pt.y);
+      }
+    }
+
     /*mode vertex*/
     if(ver == 1) {
       Color green = {0, 1, 0};
@@ -43,10 +51,6 @@ void display_CB()
 
     /*mode edge*/
     else if(edg == 1) {
-      /*if((size_t)pos == poly->length) {
-        d = -1;
-        pos--;
-      }*/
     	Color red = {1, 0, 0};
       Poly_selectE(img, poly, pos, red);
     }
@@ -118,22 +122,10 @@ void keyboard_CB(unsigned char key, int x, int y)
 			break;
 		case 'c' :
       cl = !cl;
-
-      /*fermeture du polygone*/
-      if(cl == 1) {
-        if(poly != NULL && poly->length >= 3) {
-          poly->last->next = poly->first;
-        }
-      }
-
-      /*ouverture du polygone*/
-      else {
-        poly->last->next = NULL;
-      }
 			break;
 		case 127 :
       if(ver == 1) {
-        Poly_deleteP(img, poly, pos, cl);
+        Poly_deleteP(img, poly, pos);
         if((size_t)pos == (poly->length+1) && poly->length >= (size_t)1) {
           pos--;
         }
@@ -171,7 +163,6 @@ void special_CB(int key, int x, int y)
 		case GLUT_KEY_PAGE_DOWN :
       d = -1;
       printf("pos : %d\n",pos);
-      //printf("length : %d\n", (int)poly->length);
 
       /*mode vertex*/
       if(ver == 1) {
@@ -196,25 +187,8 @@ void special_CB(int key, int x, int y)
           }
         }
         else if((size_t)pos == poly->length) {
-          if(cl == 0) {
-            pos--;
-          }
-          else {
-            pos = 1;
-          }
+          pos = 1;
         }
-
-        /*polygone fermé
-        if(cl == 1) {
-
-          if((size_t)pos == (poly->length)-1) {
-            pos++;
-          }
-
-          else if((size_t)pos == poly->length) {
-            pos = 1;
-          }
-        }*/
     	}
     	break;
 		case GLUT_KEY_PAGE_UP :

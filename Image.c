@@ -381,7 +381,6 @@ void I_bresenhamColor(Image *img, int xA, int yA, int xB, int yB, Color c) {
 	int incrd1, incrd2;
 	int x, y;
 
-
 	Z2_to_firstOctant(xA, yA, xB, yB, &xA_1o, &yA_1o, &xB_1o, &yB_1o);
 	dx = xB_1o - xA_1o; dy = yB_1o - yA_1o;
 	incrd1 = 2*dy; incrd2 = 2*(dy-dx);

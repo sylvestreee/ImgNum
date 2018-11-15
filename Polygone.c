@@ -154,25 +154,9 @@ void Poly_draw(Image *img, Polygone *poly, int cl) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
 			struct node *p_temp = poly->first;
-
-			/*polygone ouvert*/
-			if(cl == 0) {
-				while(p_temp->next != NULL) {
-					I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
-					p_temp = p_temp->next;
-				}
-			}
-
-			/*polygone fermé*/
-			else {
-				if(p_temp->next != NULL) {
-					I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
-					p_temp = p_temp->next;
-				}
-				while(p_temp->prev != NULL) {
-					I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
-					p_temp = p_temp->next;
-				}
+			while(p_temp->next != NULL) {
+				I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
+				p_temp = p_temp->next;
 			}
 		}
 	}
@@ -251,21 +235,12 @@ void Poly_deletePf(Image *img, Polygone *poly) {
 //	Prend en paramètre une image (type Image), un polygone (type Polygone).
 //	Supprime le dernier point de la chaîne.
 //---------------------------------------------------------------------------
-void Poly_deletePl(Image *img, Polygone *poly, int cl) {
+void Poly_deletePl(Image *img, Polygone *poly) {
 	if(poly != NULL) {
 		if(poly->last != NULL) {
 			struct node *p_temp = poly->last;
 			if(poly->length != (size_t)1) {
-
-				/*polygone ouvert*/
-				if(cl == 0) {
-					p_temp->prev->next = NULL;
-				}
-
-				/*polygone fermé*/
-				else {
-					p_temp->prev->next = poly->first;
-				}
+				p_temp->prev->next = NULL;
 				poly->last = p_temp->prev;
 				free(p_temp);
 				poly->length--;
@@ -286,13 +261,13 @@ void Poly_deletePl(Image *img, Polygone *poly, int cl) {
 //	Parcourt la chaîne jusqu'à atteindre le point indiqué par la position.
 // 	Une fois ce dernier atteint, il est supprimé de la chaîne.
 //---------------------------------------------------------------------------
-void Poly_deleteP(Image *img, Polygone *poly, int pos, int cl) {
+void Poly_deleteP(Image *img, Polygone *poly, int pos) {
 	if(poly != NULL) {
 		if(pos == 1) {
 			Poly_deletePf(img, poly);
 		}
 		else if((size_t)pos == poly->length) {
-			Poly_deletePl(img, poly, cl);
+			Poly_deletePl(img, poly);
 		}
 		else {
 			if(poly->first != NULL) {
@@ -369,7 +344,14 @@ void Poly_selectE(Image *img, Polygone *poly, int pos, Color c) {
 			int i = 1;
 			while(p_temp != NULL && i <= pos) {
 				if(i == pos) {
-					I_bresenhamColor(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, c);
+					if(p_temp->next != NULL) {
+						I_bresenhamColor(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, c);
+					}
+					else {
+						printf("hey\n");
+						I_bresenhamColor(img, poly->last->pt.x, poly->last->pt.y, poly->first->pt.x, poly->first->pt.y, c);
+						printf("salut\n");
+					}
 				}
 				else {
 					p_temp = p_temp->next;
@@ -395,9 +377,16 @@ void Poly_addE(Image *img, Polygone *poly, int pos) {
 			int i = 1;
 			while(p_temp != NULL && i <= pos) {
 				if(i == pos) {
-					x_n = (p_temp->pt.x + p_temp->next->pt.x)/2;
-					y_n = (p_temp->pt.y + p_temp->next->pt.y)/2;
-					Poly_addPoint(poly, x_n, y_n, pos+1);
+					if(p_temp->next != NULL) {
+						x_n = (p_temp->pt.x + p_temp->next->pt.x)/2;
+						y_n = (p_temp->pt.y + p_temp->next->pt.y)/2;
+						Poly_addPoint(poly, x_n, y_n, pos+1);
+					}
+					else {
+						x_n = (poly->last->pt.x + poly->first->pt.x)/2;
+						y_n = (poly->last->pt.y + poly->first->pt.y)/2;
+						Poly_addPointLast(poly, x_n, y_n);
+					}
 				}
 				else {
 					p_temp = p_temp->next;
@@ -452,48 +441,34 @@ int closestEdge(Image *img, Polygone *poly, int x, int y, int cl) {
 	int min, indice, dist, x_n, y_n;
 	if(poly != NULL) {
 		if(poly->first != NULL) {
-			struct node *p_temp = poly->first;
 			int i = 1;
+			struct node *p_temp = poly->first;
 
-			/*polygone ouvert*/
-			if(cl == 0) {
-				while(p_temp->next != NULL) {
-					x_n = (p_temp->pt.x + p_temp->next->pt.x)/2;
-					y_n = (p_temp->pt.y + p_temp->next->pt.y)/2;
-					dist = sqrt(pow(x-x_n, 2) + pow(y-y_n, 2));
-					if(i == 1) {
-						min = dist;
-						indice = i;
-					}
-					else {
-						if(dist < min) {
-							min = dist;
-							indice = i;
-						}
-					}
-					i++;
-					p_temp = p_temp->next;
-				}
-			}
-
-			/*polygone fermé*/
-			else {
+			while(p_temp->next != NULL) {
 				x_n = (p_temp->pt.x + p_temp->next->pt.x)/2;
 				y_n = (p_temp->pt.y + p_temp->next->pt.y)/2;
 				dist = sqrt(pow(x-x_n, 2) + pow(y-y_n, 2));
-				min = dist;
-				indice = i;
-				i++;
-				while(p_temp->prev != NULL) {
-					x_n = (p_temp->pt.x + p_temp->next->pt.x)/2;
-					y_n = (p_temp->pt.y + p_temp->next->pt.y)/2;
-					dist = sqrt(pow(x-x_n, 2) + pow(y-y_n, 2));
+				if(i == 1) {
+					min = dist;
+					indice = i;
+				}
+				else {
 					if(dist < min) {
 						min = dist;
 						indice = i;
 					}
-					i++;
-					p_temp = p_temp->next;
+				}
+				i++;
+				p_temp = p_temp->next;
+			}
+
+			if(cl == 1) {
+				x_n = (poly->last->pt.x + poly->first->pt.x)/2;
+				y_n = (poly->last->pt.y + poly->first->pt.y)/2;
+				dist = sqrt(pow(x-x_n, 2) + pow(y-y_n, 2));
+				if(dist < min) {
+					min = dist;
+					indice = i;
 				}
 			}
 		}
