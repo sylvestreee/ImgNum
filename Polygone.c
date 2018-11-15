@@ -286,13 +286,13 @@ void Poly_deletePl(Image *img, Polygone *poly, int cl) {
 //	Parcourt la chaîne jusqu'à atteindre le point indiqué par la position.
 // 	Une fois ce dernier atteint, il est supprimé de la chaîne.
 //---------------------------------------------------------------------------
-void Poly_deleteP(Image *img, Polygone *poly, int pos) {
+void Poly_deleteP(Image *img, Polygone *poly, int pos, int cl) {
 	if(poly != NULL) {
 		if(pos == 1) {
 			Poly_deletePf(img, poly);
 		}
 		else if((size_t)pos == poly->length) {
-			Poly_deletePl(img, poly);
+			Poly_deletePl(img, poly, cl);
 		}
 		else {
 			if(poly->first != NULL) {
@@ -452,6 +452,7 @@ int closestEdge(Image *img, Polygone *poly, int x, int y, int cl) {
 	int min, indice, dist, x_n, y_n;
 	if(poly != NULL) {
 		if(poly->first != NULL) {
+			struct node *p_temp = poly->first;
 			int i = 1;
 
 			/*polygone ouvert*/

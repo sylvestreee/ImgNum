@@ -51,11 +51,6 @@ void display_CB()
       Poly_selectE(img, poly, pos, red);
     }
 
-    /*fermer le polygone*/
-    if(cl == 1) {
-    	I_bresenham(img, poly->first->pt.x, poly->first->pt.y, poly->last->pt.x, poly->last->pt.y);
-    }
-
     /*scan_line*/
     if(s == 1) {
       if(cl == 1) {
@@ -138,7 +133,7 @@ void keyboard_CB(unsigned char key, int x, int y)
 			break;
 		case 127 :
       if(ver == 1) {
-        Poly_deleteP(img, poly, pos);
+        Poly_deleteP(img, poly, pos, cl);
         if((size_t)pos == (poly->length+1) && poly->length >= (size_t)1) {
           pos--;
         }
@@ -175,16 +170,27 @@ void special_CB(int key, int x, int y)
 		case GLUT_KEY_RIGHT : d = 3; Poly_move(img, poly, pos, d); break;
 		case GLUT_KEY_PAGE_DOWN :
       d = -1;
+      //printf("pos : %d\n",pos);
+      //printf("length : %d\n", (int)poly->length);
+
       /*mode vertex*/
       if(ver == 1) {
-      	if((size_t)pos != poly->length) {
+      	if((size_t)pos < poly->length) {
       		pos++;
         }
-
-        /*polygone fermé -> arrivé au dernier point*/
-        if(cl == 1 && (size_t)pos == poly->length) {
-          pos = 1;
+        else if((size_t)pos == poly->length) {
+          if(cl == 1) {
+            pos = 1;
+          }
         }
+
+        /*polygone fermé -> arrivé au dernier point
+        if(cl == 1) {
+          if((size_t)pos > poly->length) {
+            printf("hey\n");
+            pos = 1;
+          }
+        }*/
       }
 
       /*edge mode*/
@@ -203,18 +209,19 @@ void special_CB(int key, int x, int y)
 
           /*arrivé au dernier point*/
           else if((size_t)pos == poly->length) {
-          pos = 1;
+            pos = 1;
+          }
         }
     	}
     	break;
 		case GLUT_KEY_PAGE_UP :
-			if(pos != 1) {
+			if(pos > 1) {
 				pos--;
 			}
-
-      /*polygone fermé -> arrivé au premier point*/
-      if(cl == 1 && pos == 1) {
-        pos = (int)poly->length;
+      else if(pos == 1) {
+        if(cl == 1) {
+          pos = (int)poly->length;
+        }
       }
 			break;
 
