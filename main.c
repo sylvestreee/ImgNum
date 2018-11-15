@@ -43,10 +43,10 @@ void display_CB()
 
     /*mode edge*/
     else if(edg == 1) {
-      if((size_t)pos == poly->length) {
+      /*if((size_t)pos == poly->length) {
         d = -1;
         pos--;
-      }
+      }*/
     	Color red = {1, 0, 0};
       Poly_selectE(img, poly, pos, red);
     }
@@ -170,7 +170,7 @@ void special_CB(int key, int x, int y)
 		case GLUT_KEY_RIGHT : d = 3; Poly_move(img, poly, pos, d); break;
 		case GLUT_KEY_PAGE_DOWN :
       d = -1;
-      //printf("pos : %d\n",pos);
+      printf("pos : %d\n",pos);
       //printf("length : %d\n", (int)poly->length);
 
       /*mode vertex*/
@@ -183,35 +183,38 @@ void special_CB(int key, int x, int y)
             pos = 1;
           }
         }
-
-        /*polygone fermé -> arrivé au dernier point
-        if(cl == 1) {
-          if((size_t)pos > poly->length) {
-            printf("hey\n");
-            pos = 1;
-          }
-        }*/
       }
 
       /*edge mode*/
     	else if(edg == 1) {
-      	if((size_t)pos != (poly->length)-1) {
+      	if((size_t)pos < (poly->length)-1) {
       		pos++;
       	}
+        else if((size_t)pos == (poly->length)-1) {
+          if(cl == 1) {
+            pos++;
+          }
+        }
+        else if((size_t)pos == poly->length) {
+          if(cl == 0) {
+            pos--;
+          }
+          else {
+            pos = 1;
+          }
+        }
 
-        /*polygone fermé*/
+        /*polygone fermé
         if(cl == 1) {
 
-          /*arrivé à l'avant-dernier point*/
           if((size_t)pos == (poly->length)-1) {
             pos++;
           }
 
-          /*arrivé au dernier point*/
           else if((size_t)pos == poly->length) {
             pos = 1;
           }
-        }
+        }*/
     	}
     	break;
 		case GLUT_KEY_PAGE_UP :
