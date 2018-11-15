@@ -34,7 +34,7 @@ void display_CB()
     I_fill(img, black);
     glColor3ub(255,255,255);
 
-    Poly_draw(img, poly);
+    Poly_draw(img, poly, cl);
     /*mode vertex*/
     if(ver == 1) {
       Color green = {0, 1, 0};
@@ -43,7 +43,6 @@ void display_CB()
 
     /*mode edge*/
     else if(edg == 1) {
-      //Poly_draw(img, poly);
       if((size_t)pos == poly->length) {
         d = -1;
         pos--;
@@ -89,7 +88,7 @@ void mouse_CB(int button, int state, int x, int y)
 
     /*mode edge*/
     else if(edg == 1) {
-      pos = closestEdge(img, poly, x, y);
+      pos = closestEdge(img, poly, x, y, cl);
     }
   }
 
