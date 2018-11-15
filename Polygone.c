@@ -348,9 +348,7 @@ void Poly_selectE(Image *img, Polygone *poly, int pos, Color c) {
 						I_bresenhamColor(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, c);
 					}
 					else {
-						printf("hey\n");
 						I_bresenhamColor(img, poly->last->pt.x, poly->last->pt.y, poly->first->pt.x, poly->first->pt.y, c);
-						printf("salut\n");
 					}
 				}
 				else {

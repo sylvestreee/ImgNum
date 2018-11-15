@@ -43,6 +43,13 @@ void display_CB()
       }
     }
 
+    /*scan_line*/
+    if(s == 1) {
+      if(cl == 1) {
+        scan_line(img, poly);
+      }
+    }
+
     /*mode vertex*/
     if(ver == 1) {
       Color green = {0, 1, 0};
@@ -53,13 +60,6 @@ void display_CB()
     else if(edg == 1) {
     	Color red = {1, 0, 0};
       Poly_selectE(img, poly, pos, red);
-    }
-
-    /*scan_line*/
-    if(s == 1) {
-      if(cl == 1) {
-        scan_line(img, poly);
-      }
     }
     I_draw(img);
     glutSwapBuffers();
@@ -132,7 +132,6 @@ void keyboard_CB(unsigned char key, int x, int y)
         if(poly->length == (size_t)0) {
           pos = 1;
         }
-        printf("pos : %d\n",pos);
       }
       break;
 
@@ -162,7 +161,6 @@ void special_CB(int key, int x, int y)
 		case GLUT_KEY_RIGHT : d = 3; Poly_move(img, poly, pos, d); break;
 		case GLUT_KEY_PAGE_DOWN :
       d = -1;
-      printf("pos : %d\n",pos);
 
       /*mode vertex*/
       if(ver == 1) {
