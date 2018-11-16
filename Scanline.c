@@ -160,6 +160,7 @@ void scan_line(Image *img, Polygone *poly) {
 	int xB = xMax;
 	int y, inter, i;
 
+	/*parcours du polygone le long de l'axe Y*/
 	for(i = yMin; i < yMax; i++) {
 		y = i;
 		Polygone *poly_inter = Poly_new();
@@ -170,14 +171,34 @@ void scan_line(Image *img, Polygone *poly) {
 		if(poly != NULL) {
 			if(poly->first != NULL) {
 				struct node *p_temp = poly->first;
+
+				/*parcours de la chaîne tant que le dernier point n'est pas atteint*/
 				while(p_temp->next != NULL) {
+
+					/*test d'une instersection entre l'arête courante et la droite y = i*/
 					inter = get_line_intersection(xA, y, xB, y, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, x_inter, y_inter);
+
+					/*s'il y a instersection...*/
 					if(inter) {
+
+						/*
+							...et si la coordonnée y de l'intersection n'est pas égale
+							au max entre les coordonnées y des extrêmités de l'arête courante
+							(si elle est égale et que celle-ci était incluse, alors il y aurait
+							le dessin d'une ligne au-dessus d'une cavité par exemple)
+							alors on conserve l'intersection
+						*/
 						if(*y_inter != fmax(p_temp->pt.y, p_temp->next->pt.y)) {
 							if(poly_inter->length == (size_t)0) {
 								Poly_addPointFirst(poly_inter, *x_inter, *y_inter);
 							}
               else {
+
+								/*
+									les intersections sont rangées dans l'ordre croissant
+									de leur coordonnée x, pour un dessin des
+									lignes de Bresenham dans un ordre logique
+								*/
 								Poly_addPointOrder(poly_inter, *x_inter, *y_inter);
 							}
 						}
@@ -192,6 +213,11 @@ void scan_line(Image *img, Polygone *poly) {
 				}
 			}
 		}
+
+		/*
+			dessin de lignes de Bresenham entre les intersections trouvées
+			entre les différentes arêtes du polygone et la droite y = i
+		*/
 		Poly_drawSc(img, poly_inter);
 		Poly_delete(&poly_inter);
 	}
