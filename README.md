@@ -103,7 +103,7 @@ Pour réaliser les mêmes opérations que l'exemple ci-dessus, suivre les instru
 
 4.  Fermez le polygone à l'aide de la touche `c`.
 
-5.  Pour remplir le polygone, appuyez sur la touche `f` et réappuyer à nouveau sur cette même touche pour le vider.
+5.  Pour remplir le polygone, appuyez sur la touche `f` et réappuyez à nouveau sur cette même touche pour le vider.
 
 6.  Entrez en mode `edge` en appuyant sur la touche `e`, la première arête est sélectionnée automatiquement.
 
