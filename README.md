@@ -95,7 +95,7 @@ La deuxième et dernière fonctionnalité permet à l'utilisateur d'ajouter à l
 
 Pour réaliser les mêmes opérations que l'exemple ci-dessus, suivre les instructions suivantes :
 
-1.  Ouvrez un terminal et compilez le programme à l'aide de la commane `make`.
+1.  Ouvrez un terminal et compilez le programme à l'aide de la commande `make`.
 
 2.  Lancez le programme en ouvrant une fenêtre en utilisant la commande `plot 400 400`.
 
