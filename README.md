@@ -114,3 +114,5 @@ Pour réaliser les mêmes opérations que l'exemple ci-dessus, suivre les instru
 9.  Déplacez le premier sommet sur la gauche puis vers le haut, à l'aide respectivement des touches :arrow_left: et :arrow_up:.
 
 10. Enfin, supprimez le premier sommet à l'aide de la touche `suppr`.
+
+11. Appuyez sur `echap` pour quitter le programme.
