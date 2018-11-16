@@ -97,7 +97,7 @@ Pour réaliser les mêmes opérations que l'exemple ci-dessus, suivre les instru
 
 1.  Ouvrez un terminal et compilez le programme à l'aide de la commande `make`.
 
-2.  Lancez le programme en ouvrant une fenêtre en utilisant la commande `plot 400 400`.
+2.  Lancez le programme en ouvrant une fenêtre en utilisant la commande `./plot 400 400`.
 
 3.  Vous commencez en mode `insert`. Entrez successivement les points à l'aide du `clic gauche` de la souris :computer_mouse:.
 
