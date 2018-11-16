@@ -88,3 +88,29 @@ Il n'est pas possible de parcourir le polygone à l'aide des touches si celui-ci
 La deuxième et dernière fonctionnalité permet à l'utilisateur d'ajouter à l'aide du `bouton du milieu` de la souris :computer_mouse: un point au milieu de l'arête sélectionnée :
 
 ![](illustrations/add.gif)
+
+## Exemple d'utilisation
+
+![](illustrations/test.gif)
+
+Pour réaliser les mêmes opérations que l'exemple ci-dessus, suivre les instructions suivantes :
+
+1.  Vous commencez en mode `insert`. Entrez successivement les points à l'aide du `clic gauche` de la souris :computer_mouse:.
+
+2.  Fermez le polygone à l'aide de la touche `c`.
+
+3.  Pour remplir le polygone, appuyez sur la touche `f` et réappuyer à nouveau sur cette même touche pour le vider.
+
+4.  Entrez en mode `edge` en appuyant sur la touche `e`, la première arête est sélectionnée automatiquement.
+
+5.  Appuyez à répétition sur la touche `page suivante` :arrow_double_down: pour parcourir le polygone jusqu'à revenir à la première arête.
+
+6.  Créez un nouveau sommet au milieu de la première arête en appuyant sur le `bouton du milieu` de la souris :computer_mouse:.
+
+7.  Entrez en mode `vertex` en appuyant sur la touche `v`, le premier sommet est sélectionné.
+
+8.  Appuyez à répétition sur la touche `page précédente` :arrow_double_up: pour parcourir le polygone en sens inverse jusqu'à revenir au premier sommet.
+
+9.  Déplacez le premier sommet sur la gauche puis vers le haut, à l'aide respectivement des touches :arrow_left: et :arrow_up:.
+
+10. Enfin, supprimez le premier sommet à l'aide de la touche `suppr`.
