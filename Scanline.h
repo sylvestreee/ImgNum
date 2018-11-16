@@ -9,6 +9,7 @@
 #include "Polygone.h"
 #include "Ppm.h"
 
+//-----------------------------------------------------
 int getXmin								(Polygone *poly);
 int getYmin								(Polygone *poly);
 int getXmax								(Polygone *poly);

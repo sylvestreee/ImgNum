@@ -108,17 +108,9 @@ void Poly_addPoint(Polygone *poly, int x, int y, int pos) {
 					struct node *pt_new = malloc(sizeof *pt_new);
 					if(pt_new != NULL) {
 						pt_new->pt = P_new(x, y);
-
-						/*bound new with next*/
 						pt_new->next = pt_temp;
-
-						/*bound new with prev*/
 						pt_new->prev = pt_temp->prev;
-
-						/*bound prev with new*/
 						pt_temp->prev->next = pt_new;
-
-						/*bound next with new*/
 						pt_temp->prev = pt_new;
 						poly->length++;
 					}
@@ -154,7 +146,11 @@ void Poly_draw(Image *img, Polygone *poly, int cl) {
 	if(poly != NULL) {
 		if(poly->first != NULL) {
 			struct node *p_temp = poly->first;
+
+			/*parcours de la chaîne tant que le dernier point n'est pas atteint*/
 			while(p_temp->next != NULL) {
+
+				/*dessin d'une droite de Bresenham entre le point courant et son successeur*/
 				I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
 				p_temp = p_temp->next;
 			}
@@ -173,6 +169,8 @@ void Poly_drawSc(Image *img, Polygone *poly) {
 			struct node *p_temp = poly->first;
 			while(p_temp != NULL && p_temp->next != NULL) {
 				I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
+
+				/*blablabla*/
 				p_temp = p_temp->next->next;
 			}
 		}
@@ -191,8 +189,12 @@ void Poly_select(Image *img, Polygone *poly, int pos, Color c) {
 		if(poly->first != NULL) {
 			struct node *p_temp = poly->first;
 			int i = 1;
+
+			/*parcours de la chaîne tant que la position souhaitée n'est pas atteinte*/
 			while(p_temp != NULL && i <= pos) {
 				if(i == pos) {
+
+					/*une fois la position atteinte, dessin d'un carré coloré autour du point associé à cette position*/
 					I_bresenhamColor(img, (p_temp->pt.x)-5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)+5,c);
 					I_bresenhamColor(img, (p_temp->pt.x)+5,(p_temp->pt.y)+5,(p_temp->pt.x)+5,(p_temp->pt.y)-5,c);
 					I_bresenhamColor(img, (p_temp->pt.x)+5,(p_temp->pt.y)-5,(p_temp->pt.x)-5,(p_temp->pt.y)-5,c);
@@ -221,6 +223,12 @@ void Poly_deletePf(Image *img, Polygone *poly) {
 				free(p_temp);
 				poly->length--;
 			}
+
+			/*
+				si le premier point est aussi le dernier point de la chaîne,
+				alors est réinitialisé le premier et dernier point de la chaîne à NULL,
+				ainsi que la longueur de la chaîne à 0
+			*/
 			else {
 				free(p_temp);
 				poly->first = NULL;
@@ -305,15 +313,23 @@ void Poly_move(Image *img, Polygone *poly, int pos, int d) {
 			while(p_temp != NULL && i <= pos) {
 				if(i == pos) {
 					switch(d) {
+
+						/*déplacement du point vers le haut*/
 						case 0 :
 							p_temp->pt.y-=1;
 							break;
+
+						/*déplacement du point vers le bas*/
 						case 1 :
 							p_temp->pt.y+=1;
 							break;
+
+						/*déplacement du point vers la gauche*/
 						case 2 :
 							p_temp->pt.x-=1;
 							break;
+
+						/*déplacement du point vers la droite*/
 						case 3 :
 							p_temp->pt.x+=1;
 							break;
@@ -343,10 +359,19 @@ void Poly_selectE(Image *img, Polygone *poly, int pos, Color c) {
 			struct node *p_temp = poly->first;
 			int i = 1;
 			while(p_temp != NULL && i <= pos) {
+
+				/*l'indice du premier point de l'arête correspond à l'indice de l'arête*/
 				if(i == pos) {
 					if(p_temp->next != NULL) {
 						I_bresenhamColor(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, c);
 					}
+
+					/*
+						si la position atteinte est celle du dernier point,
+						alors cela veut dire que le polygone est fermé
+						donc dessin normal d'une droite colorée entre le dernier point
+						et le premier point
+					*/
 					else {
 						I_bresenhamColor(img, poly->last->pt.x, poly->last->pt.y, poly->first->pt.x, poly->first->pt.y, c);
 					}

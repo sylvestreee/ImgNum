@@ -27,8 +27,7 @@ int edg = 0;
 //	appelee. Tous les dessins doivent etre faits a partir
 //	de cette fonction.
 //------------------------------------------------------------------
-void display_CB()
-{
+void display_CB() {
     glClear(GL_COLOR_BUFFER_BIT);
     Color black = {0, 0, 0};
     I_fill(img, black);
@@ -38,13 +37,17 @@ void display_CB()
 
     /*fermeture du polygone*/
     if(cl == 1) {
+
+      /*fermeture possible uniquement si le polygone est constitué d'au moins 2 points*/
       if(poly->length > (size_t)1) {
         I_bresenham(img, poly->last->pt.x, poly->last->pt.y, poly->first->pt.x, poly->first->pt.y);
       }
     }
 
-    /*scan_line*/
+    /*scan line*/
     if(s == 1) {
+
+      /*scan line possible uniquement si le polygone est fermé*/
       if(cl == 1) {
         scan_line(img, poly);
       }
@@ -53,12 +56,16 @@ void display_CB()
     /*mode vertex*/
     if(ver == 1) {
       Color green = {0, 1, 0};
+
+      /*sélection d'un sommet*/
       Poly_select(img, poly, pos, green);
     }
 
     /*mode edge*/
     else if(edg == 1) {
     	Color red = {1, 0, 0};
+
+      /*sélection d'une arête*/
       Poly_selectE(img, poly, pos, red);
     }
     I_draw(img);
@@ -70,31 +77,40 @@ void display_CB()
 // la souris (x,y), en fonction du bouton de la souris qui a été
 // pressé ou relaché.
 //------------------------------------------------------------------
-void mouse_CB(int button, int state, int x, int y)
-{
+void mouse_CB(int button, int state, int x, int y) {
+  /*clic gauche*/
   if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
     I_focusPoint(img,x,img->_height-y);
 
     /*mode insert*/
 	  if(ins == 1) {
+
+      /*ajout d'un nouveau point (ajouté à la suite du dernier point)*/
       Poly_addPointLast(poly, x, y);
     }
 
     /*mode vertex*/
     else if(ver == 1) {
+
+      /*récupération de la position du point le plus proche du clic*/
       pos = closestVertex(img, poly, x, y);
     }
 
     /*mode edge*/
     else if(edg == 1) {
+
+      /*récupération de la position (du premier point) de l'arête la plus proche du clic*/
       pos = closestEdge(img, poly, x, y, cl);
     }
   }
 
+  /*boutton du milieu*/
 	else if((button==GLUT_MIDDLE_BUTTON)&&(state==GLUT_DOWN)) {
 
     /*mode vertex*/
     if(edg == 1) {
+
+      /*ajout d'un point au milieu de l'arête sélectionnée*/
 			Poly_addE(img, poly, pos);
 		}
 	}
@@ -105,12 +121,10 @@ void mouse_CB(int button, int state, int x, int y)
 // Cette fonction permet de réagir au fait que l'utilisateur
 // presse une touche (non-spéciale) du clavier.
 //------------------------------------------------------------------
-void keyboard_CB(unsigned char key, int x, int y)
-{
-	/*fprintf(stderr,"key=%d\n",key);*/
-
+void keyboard_CB(unsigned char key, int x, int y) {
 	switch(key)
 	{
+    /*echap*/
 		case 27 : Poly_delete(&poly); exit(1); break;
 		case 'z' : I_zoom(img,2.0); break;
 		case 'Z' : I_zoom(img,0.5); break;
@@ -124,11 +138,26 @@ void keyboard_CB(unsigned char key, int x, int y)
       cl = !cl;
 			break;
 		case 127 :
+
+      /*mode vertex*/
       if(ver == 1) {
         Poly_deleteP(img, poly, pos);
+
+        /*
+          si le point supprimé correspondait au dernier point du polygone
+          et que celui-ci n'est pas vide, alors on diminue la valeur de la
+          position de 1 pour ramener la sélection du point au "nouveau" dernier point
+        */
         if((size_t)pos == (poly->length+1) && poly->length >= (size_t)1) {
           pos--;
         }
+
+        /*
+          si le point supprimé était le dernier point du polygone,
+          alors est réinitialisé la valeur de la position à 1, pour afficher
+          le premier point ou la première arête en cas de sélection après
+          le dessin d'un nouveau polygone
+        */
         if(poly->length == (size_t)0) {
           pos = 1;
         }
@@ -145,9 +174,7 @@ void keyboard_CB(unsigned char key, int x, int y)
 // presse une touche spéciale (F1, F2 ... F12, home, end, insert,
 // haut, bas, droite, gauche etc).
 //------------------------------------------------------------------
-
-void special_CB(int key, int x, int y)
-{
+void special_CB(int key, int x, int y) {
 	/*
     int mod = glutGetModifiers();
 	  int d = 10;

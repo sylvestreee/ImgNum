@@ -14,7 +14,7 @@ typedef struct {
 	int x, y;
 } Point;
 
-Point P_new(int x, int y);
+Point P_new								(int x, int y);
 
 //-----------------------------------------------------
 struct node {
@@ -30,12 +30,12 @@ typedef struct {
 	struct node *last;
 } Polygone;
 
-Polygone *Poly_new(void);
-void Poly_addPointLast(Polygone *poly, int x, int y);
-void Poly_addPointFirst(Polygone *poly, int x, int y);
-void Poly_addPointOrder(Polygone *poly, int x, int y);
-void Poly_addPoint(Polygone *poly, int x, int y, int pos);
-void Poly_delete(Polygone **poly);
+Polygone *Poly_new				(void);
+void Poly_addPointLast		(Polygone *poly, int x, int y);
+void Poly_addPointFirst		(Polygone *poly, int x, int y);
+void Poly_addPointOrder		(Polygone *poly, int x, int y);
+void Poly_addPoint				(Polygone *poly, int x, int y, int pos);
+void Poly_delete					(Polygone **poly);
 
 //-----------------------------------------------------
 void Poly_draw						(Image *img, Polygone *poly, int cl);
