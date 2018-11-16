@@ -170,7 +170,10 @@ void Poly_drawSc(Image *img, Polygone *poly) {
 			while(p_temp != NULL && p_temp->next != NULL) {
 				I_bresenham(img, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y);
 
-				/*blablabla*/
+				/*
+					le prochain point est le successeur du successeur du point courant
+					car les points sont choisis deux à deux
+				*/
 				p_temp = p_temp->next->next;
 			}
 		}
@@ -303,7 +306,7 @@ void Poly_deleteP(Image *img, Polygone *poly, int pos) {
 //	une position (type int) et une direction (type int).
 //	Parcourt la chaîne jusqu'à atteindre le point indiqué par la position.
 // 	Une fois ce dernier atteint, il est déplacé dans la direction indiquée
-//	(0 -> haut / 1 -> bas / 2 -> gauche / 3 -> droite).
+//	(0 -> haut | 1 -> bas | 2 -> gauche | 3 -> droite).
 //---------------------------------------------------------------------------
 void Poly_move(Image *img, Polygone *poly, int pos, int d) {
 	if(poly != NULL) {
@@ -466,7 +469,6 @@ int closestEdge(Image *img, Polygone *poly, int x, int y, int cl) {
 		if(poly->first != NULL) {
 			int i = 1;
 			struct node *p_temp = poly->first;
-
 			while(p_temp->next != NULL) {
 				x_n = (p_temp->pt.x + p_temp->next->pt.x)/2;
 				y_n = (p_temp->pt.y + p_temp->next->pt.y)/2;

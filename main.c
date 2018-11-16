@@ -11,14 +11,25 @@
 Image *img;
 Polygone *poly;
 
+/*0 -> polygone ouvert | 1 -> polygone fermé*/
 int cl = 0;
+
+/*position du point / de l'arête sélectionné(e)*/
 int pos = 1;
+
+/*direction de déplacement d'un point*/
 int d = -1;
+
+/*0 -> scan line désactivé | 1 -> scan line activé*/
 int s = 0;
 
-/*modes*/
+/*0 -> mode insert désactivé | 1 -> mode insert activé*/
 int ins = 1;
+
+/*0 -> mode vertex désactivé | 1 -> mode vertex activé*/
 int ver = 0;
+
+/*0 -> mode edge désactivé | 1 -> mode edge activé*/
 int edg = 0;
 
 //------------------------------------------------------------------
@@ -78,6 +89,7 @@ void display_CB() {
 // pressé ou relaché.
 //------------------------------------------------------------------
 void mouse_CB(int button, int state, int x, int y) {
+
   /*clic gauche*/
   if((button==GLUT_LEFT_BUTTON)&&(state==GLUT_DOWN)) {
     I_focusPoint(img,x,img->_height-y);
@@ -104,7 +116,7 @@ void mouse_CB(int button, int state, int x, int y) {
     }
   }
 
-  /*boutton du milieu*/
+  /*bouton du milieu*/
 	else if((button==GLUT_MIDDLE_BUTTON)&&(state==GLUT_DOWN)) {
 
     /*mode vertex*/
@@ -145,8 +157,8 @@ void keyboard_CB(unsigned char key, int x, int y) {
 
         /*
           si le point supprimé correspondait au dernier point du polygone
-          et que celui-ci n'est pas vide, alors on diminue la valeur de la
-          position de 1 pour ramener la sélection du point au "nouveau" dernier point
+          et que celui-ci n'est pas vide, alors la valeur de la position
+          est décrémentée de 1 pour ramener la sélection du point au "nouveau" dernier point
         */
         if((size_t)pos == (poly->length+1) && poly->length >= (size_t)1) {
           pos--;
@@ -154,7 +166,7 @@ void keyboard_CB(unsigned char key, int x, int y) {
 
         /*
           si le point supprimé était le dernier point du polygone,
-          alors est réinitialisé la valeur de la position à 1, pour afficher
+          alors la valeur de la position est réinitialisée à 1, pour afficher
           le premier point ou la première arête en cas de sélection après
           le dessin d'un nouveau polygone
         */
@@ -175,11 +187,6 @@ void keyboard_CB(unsigned char key, int x, int y) {
 // haut, bas, droite, gauche etc).
 //------------------------------------------------------------------
 void special_CB(int key, int x, int y) {
-	/*
-    int mod = glutGetModifiers();
-	  int d = 10;
-  */
-
 	switch(key)
 	{
 		case GLUT_KEY_UP : d = 0; Poly_move(img, poly, pos, d); break;
@@ -191,10 +198,22 @@ void special_CB(int key, int x, int y) {
 
       /*mode vertex*/
       if(ver == 1) {
+
+        /*
+          si le point sélectionné n'est pas le dernier point du polygone,
+          alors la valeur de la position est normalement incrémentée
+        */
       	if((size_t)pos < poly->length) {
       		pos++;
         }
+
+        /*si le point sélectionné est le dernier point du polygone...*/
         else if((size_t)pos == poly->length) {
+
+          /*
+            ...et si le polygone est fermé alors la valeur de la position
+            est ramenée à 1 pour ramener la sélection au premier point du polygone
+          */
           if(cl == 1) {
             pos = 1;
           }
@@ -203,24 +222,56 @@ void special_CB(int key, int x, int y) {
 
       /*edge mode*/
     	else if(edg == 1) {
+
+        /*
+          si le point sélectionné n'est pas l'avant-dernier point du polygone,
+          alors la valeur de la position est normalement incrémentée
+        */
       	if((size_t)pos < (poly->length)-1) {
       		pos++;
       	}
+
+        /*si le point sélectionné est l'avant-dernier point du polygone...*/
         else if((size_t)pos == (poly->length)-1) {
+
+          /*
+            ...et si le polygone est fermé alors
+            la valeur de la position est normalement incrémentée
+          */
           if(cl == 1) {
             pos++;
           }
         }
+
+        /*
+          si le point sélectionné est le dernier point du polygone,
+          ce qui ne peut arriver que si le polygone est fermé,
+          alors la valeur de la position est ramenée à 1 pour ramener
+          la sélection à la première arête du polygone
+        */
         else if((size_t)pos == poly->length) {
           pos = 1;
         }
     	}
     	break;
 		case GLUT_KEY_PAGE_UP :
+
+      /*
+        si le point sélectionné n'est pas le premier point du polygone,
+        alors la valeur de la position est normalement décrémentée
+      */
 			if(pos > 1) {
 				pos--;
 			}
+
+      /*si le point sélectionné est l'avant-dernier point du polygone...*/
       else if(pos == 1) {
+
+        /*
+          ...et si le polygone est fermé alors la valeur de la position
+          est ramenée au nombre de points du polygone
+          pour ramener la sélection au dernier point du polygone
+        */
         if(cl == 1) {
           pos = (int)poly->length;
         }
@@ -244,6 +295,7 @@ int main(int argc, char **argv)
 	}
 	else
 	{
+    /*initialisation d'un nouveau polygone*/
 		poly = Poly_new();
 		int largeur, hauteur;
 		if(argc==2)
@@ -279,8 +331,6 @@ int main(int argc, char **argv)
 		glutKeyboardFunc(keyboard_CB);
 		glutSpecialFunc(special_CB);
 		glutMouseFunc(mouse_CB);
-		// glutMotionFunc(mouse_move_CB);
-		// glutPassiveMotionFunc(passive_mouse_move_CB);
 
 		glutMainLoop();
 		return 0;
