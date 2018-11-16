@@ -1,8 +1,7 @@
 #include "Image.h"
 
 //---------------------------------------------------------------------------
-Color C_new(float red, float green, float blue)
-{
+Color C_new(float red, float green, float blue) {
 	Color c;
 	c._red = red;
 	c._green = green;
@@ -11,16 +10,12 @@ Color C_new(float red, float green, float blue)
 }
 
 //---------------------------------------------------------------------------
-void C_check(Color c, char *message)
-{
+void C_check(Color c, char *message) {
 	fprintf(stderr,"%s : %f %f %f\n",message,c._red,c._green,c._blue);
 }
 
 //---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
-//---------------------------------------------------------------------------
-Image* I_new(int width, int height)
-{
+Image* I_new(int width, int height) {
 	Image *img_new = (Image*)malloc(sizeof(Image));
 	img_new->_width = width;
 	img_new->_height = height;
@@ -43,14 +38,12 @@ Image* I_new(int width, int height)
 }
 
 //---------------------------------------------------------------------------
-static void _plot(Image *img, int x, int y, Color c)
-{
+static void _plot(Image *img, int x, int y, Color c) {
 	img->_buffer[x][y] = c;
 }
 
-//-----
-static int _isPpm(char *imagefilename)
-{
+//---------------------------------------------------------------------------
+static int _isPpm(char *imagefilename) {
 	FILE *imagefile;
 	imagefile = fopen(imagefilename,"r");
 	if(imagefile==NULL) {perror(imagefilename); exit(1); }
@@ -66,9 +59,8 @@ static int _isPpm(char *imagefilename)
 	}
 }
 
-//-----
-Image* I_read(char *imagefilename)
-{
+//---------------------------------------------------------------------------
+Image* I_read(char *imagefilename) {
 	Image *img;
 	char command[100];
 
@@ -136,8 +128,7 @@ Image* I_read(char *imagefilename)
 }
 
 //---------------------------------------------------------------------------
-void I_fill(Image *img, Color c)
-{
+void I_fill(Image *img, Color c) {
 	int x,y;
 	for(x=0;x<img->_width;x++)
 		for(y=0;y<img->_height;y++)
@@ -145,8 +136,7 @@ void I_fill(Image *img, Color c)
 }
 
 //---------------------------------------------------------------------------
-void I_checker(Image *img, Color c1, Color c2, int step)
-{
+void I_checker(Image *img, Color c1, Color c2, int step) {
 	int x,y;
 	for(x=0;x<img->_width;x++)
 		for(y=0;y<img->_height;y++)
@@ -159,14 +149,12 @@ void I_checker(Image *img, Color c1, Color c2, int step)
 }
 
 //---------------------------------------------------------------------------
-void I_changeColor(Image *img, Color c)
-{
+void I_changeColor(Image *img, Color c) {
 	img->_current_color = c;
 }
 
 //---------------------------------------------------------------------------
-void I_plot(Image *img, int x, int y)
-{
+void I_plot(Image *img, int x, int y) {
 	if((x>=0)&&(x<img->_width)&&
 	   (y>=0)&&(y<img->_height))
 		img->_buffer[x][y] = img->_current_color;
@@ -179,8 +167,7 @@ void I_plot(Image *img, int x, int y)
 }
 
 //---------------------------------------------------------------------------
-void I_plotColor(Image *img, int x, int y, Color c)
-{
+void I_plotColor(Image *img, int x, int y, Color c) {
 	if((x>=0)&&(x<img->_width)&&
 	   (y>=0)&&(y<img->_height))
 		img->_buffer[x][y] = c;
@@ -194,14 +181,13 @@ void I_plotColor(Image *img, int x, int y, Color c)
 
 //---------------------------------------------------------------------------
 // Changement de repère
-static void _windowToImage(Image *img, int xwin, int ywin, int *ximg, int *yimg)
-{
+static void _windowToImage(Image *img, int xwin, int ywin, int *ximg, int *yimg) {
 
 	*ximg = img->_xoffset + img->_xzoom + (xwin-img->_xzoom) / img->_zoom;
 	*yimg = img->_yoffset + img->_yzoom + (ywin-img->_yzoom) / img->_zoom;
 }
 
-//-----
+//---------------------------------------------------------------------------
 // Changement de repère inverse
 /*
 static void _imageToWindow(Image *img, int ximg, int yimg, int *xwin, int *ywin)
@@ -211,10 +197,9 @@ static void _imageToWindow(Image *img, int ximg, int yimg, int *xwin, int *ywin)
 	*ywin = img->_yoffset + img->_yzoom + (yimg-img->_yzoom-img->_yoffset) * img->_zoom;
 }
 */
-//-----
 
-void I_focusPoint(Image *img, int xwin, int ywin)
-{
+//---------------------------------------------------------------------------
+void I_focusPoint(Image *img, int xwin, int ywin) {
 	int dx = xwin - img->_xzoom;
 	int dy = ywin - img->_yzoom;
 	img->_xoffset -= dx*(1-1.0/img->_zoom);
@@ -224,29 +209,25 @@ void I_focusPoint(Image *img, int xwin, int ywin)
 }
 
 //---------------------------------------------------------------------------
-void I_zoomInit(Image *img)
-{
+void I_zoomInit(Image *img) {
 	img->_xoffset = 0;
 	img->_yoffset = 0;
 	img->_zoom = 1.0;
 }
 
 //---------------------------------------------------------------------------
-void I_zoom(Image *img, double zoom_coef)
-{
+void I_zoom(Image *img, double zoom_coef) {
 	img->_zoom = img->_zoom * zoom_coef;
 }
 
 //---------------------------------------------------------------------------
-void I_move(Image *img, int x, int y)
-{
+void I_move(Image *img, int x, int y) {
 	img->_xoffset += x;
 	img->_yoffset += y;
 }
 
 //---------------------------------------------------------------------------
-void I_draw(Image *img)
-{
+void I_draw(Image *img) {
 	glBegin(GL_POINTS);
 	int xwin, ywin, ximg, yimg;
 	for(xwin=0;xwin<img->_width;xwin++)
