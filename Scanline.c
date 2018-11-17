@@ -175,7 +175,7 @@ void scan_line(Image *img, Polygone *poly) {
 				/*parcours de la chaîne tant que le dernier point n'est pas atteint*/
 				while(p_temp->next != NULL) {
 
-					/*test d'une instersection entre l'arête courante et la droite y = i*/
+					/*test d'une intersection entre l'arête courante et la droite y = i*/
 					inter = get_line_intersection(xA, y, xB, y, p_temp->pt.x, p_temp->pt.y, p_temp->next->pt.x, p_temp->next->pt.y, x_inter, y_inter);
 
 					/*s'il y a instersection...*/
